@@ -1,6 +1,6 @@
 create table if not exists cdm.dm_settlement_report 
     (
-        id serial PRIMARY KEY  ,
+        id serial NOT NULL ,
         restaurant_id varchar not null,
         restaurant_name varchar not null,
         settlement_date date not null,
