@@ -10,4 +10,4 @@ create table if not exists cdm.dm_settlement_report
         orders_bonus_granted_sum numeric(14, 2) not null,
         order_processing_fee numeric(14, 2) not null,
         restaurant_reward_sum numeric(14, 2) not null
-    )
+    );
