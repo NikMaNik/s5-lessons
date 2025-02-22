@@ -12,15 +12,6 @@ create table if not exists cdm.dm_settlement_report
         restaurant_reward_sum numeric(14, 2) not null
     );
 
-SELECT 
-    sr.restaurant_id,
-    sr.restaurant_name,
-    sr.settlement_date,
-    sr.orders_count,
-    sr.orders_total_sum,
-    sr.orders_bonus_payment_sum,
-    sr.orders_bonus_granted_sum,
-    sr.order_processing_fee,
-    sr.restaurant_reward_sum
-FROM cdm.dm_settlement_report sr
-ORDER BY sr.settlement_date DESC;
+SELECT column_name, data_type, character_maximum_length
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE table_name = 'cdm.dm_settlement_report ';
