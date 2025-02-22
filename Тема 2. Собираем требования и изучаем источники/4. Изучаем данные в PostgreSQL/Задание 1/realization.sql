@@ -19,5 +19,5 @@ SELECT
     column_default,
     is_nullable
 FROM information_schema.columns
-WHERE table_schema = 'public'  -- или укажите вашу схему
+WHERE table_schema = 'public'
 ORDER BY table_name, ordinal_position;
