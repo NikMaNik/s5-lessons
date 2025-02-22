@@ -10,7 +10,14 @@ create table if not exists cdm.dm_settlement_report
         orders_bonus_granted_sum numeric(14, 2) not null,
         order_processing_fee numeric(14, 2) not null,
         restaurant_reward_sum numeric(14, 2) not null
-    )
-SELECT column_name, data_type, character_maximum_length
-FROM INFORMATION_SCHEMA.COLUMNS
-WHERE table_name = 'cdm.dm_settlement_report ';
+    ); 
+SELECT 
+    table_name,
+    column_name,
+    data_type,
+    character_maximum_length,
+    column_default,
+    is_nullable
+FROM information_schema.columns
+WHERE table_schema = 'public'  -- или укажите вашу схему
+ORDER BY table_name, ordinal_position;
