@@ -1,1 +1,1 @@
-ALTER TABLE cdm.dm_settlement_report Primary key (id)
+ALTER TABLE cdm.dm_settlement_report ADD PRIMARY key (id)
