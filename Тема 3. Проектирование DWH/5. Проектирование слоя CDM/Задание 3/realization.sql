@@ -1,1 +1,1 @@
-ALTER TABLE cdm.dm_settlement_report ADD CONSTRAINT dm_settlement_report_settlement_date_check (date :: DATE > 2022 and date ::DATE < 2500);
+ALTER TABLE cdm.dm_settlement_report ADD CONSTRAINT dm_settlement_report_settlement_date_check (date > 2022 and date < 2500);
