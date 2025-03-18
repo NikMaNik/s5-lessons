@@ -1,0 +1,1 @@
+ALTER TABLE cdm.dm_settlement_report  ADD CONSTRAINT restaraunt_id_settlement_date_unique UNIQUE restaraunt_id, settlement_date;
