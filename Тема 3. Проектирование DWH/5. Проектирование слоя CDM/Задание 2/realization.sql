@@ -1,0 +1,1 @@
+ALTER TABLE cdm.dm_settlement_report Primary key (id)
