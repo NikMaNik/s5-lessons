@@ -1,1 +1,3 @@
-ALTER TABLE cdm.dm_settlement_report ADD CONSTRAINT dm_settlement_report_settlement_date_check CHECK (EXTRACT( YEAR FROM settlement_date) >= 2022 AND EXTRACT(YEAR FROM settlement_date) < 2500)
+ALTER TABLE cdm.dm_settlement_report 
+ADD CONSTRAINT dm_settlement_report_settlement_date_check
+CHECK (settlement_date::date  >= '2022-01-01'::date AND settlement_date::date < '2500-01-01'::date);
