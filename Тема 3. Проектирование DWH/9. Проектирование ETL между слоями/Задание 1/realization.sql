@@ -27,7 +27,7 @@ JOIN dds.dm_products as "dp" on fps.product_id = "dp".id
 JOIN dds.dm_restaurants as "dr" on "dp".restaurant_id = "dr".id
 JOIN dds.dm_timestamps as "dt" on "do".timestamp_id = "dt".id
 ON CONFLICT (restaurant_id, settlement_report) DO UPDATE SET
-    id = EXCLUDED.id
+    id = EXCLUDED.id,
     orders_count = EXCLUDED.orders_count,
     orders_total_sum = EXCLUDED.orders_total_sum,
     orders_bonus_payment_sum = EXCLUDED.orders_bonus_payment_sum,
