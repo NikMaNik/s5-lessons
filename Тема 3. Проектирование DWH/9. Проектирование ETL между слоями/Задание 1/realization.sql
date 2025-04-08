@@ -1,6 +1,6 @@
 insert into cdm.dm_settlement_report
 SELECT 
-      dr.restaurant_id
+      do.restaurant_id
     , dr.restaurant_name
     , dt.date as settlement_report
     , fps.count as orders_count
