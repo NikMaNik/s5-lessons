@@ -1,4 +1,4 @@
-insert into dm_settlement_report
+insert into cdm.dm_settlement_report
 SELECT 
       dr.restaurant_id
     , dr.restaurant_name
