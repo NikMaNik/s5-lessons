@@ -4,7 +4,7 @@ SELECT
     , "do".restaurant_id
     , "dr".restaurant_name
     , "dt".date as settlement_report
-    , COUNT(fps.count) as orders_count
+    , fps.count as orders_count
     , fps.total_sum as orders_total_sum
     , fps.bonus_payment as orders_bonus_payment_sum
     , fps.bonus_grant as orders_bonus_granted_sum
