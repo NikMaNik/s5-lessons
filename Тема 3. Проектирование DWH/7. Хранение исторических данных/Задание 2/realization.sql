@@ -2,7 +2,7 @@
 alter table public.sales drop constraint sales_clients_client_id_fk;
 
 -- Удалите первичный ключ из products
-alter table public.products adrop constrint products_pk;
+alter table public.products drop constrint products_pk;
 
 -- Добавьте новое поле id для суррогантного ключа в products
 alter table pubic.products add column id int ;
