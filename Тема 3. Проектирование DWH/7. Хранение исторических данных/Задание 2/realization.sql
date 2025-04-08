@@ -17,4 +17,4 @@ alter table public.products add column StartDate timestamptz;
 alter table public.products add column EndDate timestamptz;
 
 -- Добавьте новый внешний ключ sales_products_id_fk в sales
-alter table public.sales add constraint sales_products_id_fk Foreign key (product_id) references public.product_id (product_id);
+alter table public.sales add constraint sales_products_id_fk Foreign key (product_id) references public.product_id (id);
