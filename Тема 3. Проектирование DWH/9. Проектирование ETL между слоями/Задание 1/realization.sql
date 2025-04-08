@@ -2,7 +2,7 @@ INSERT INTO cdm.dm_settlement_report (
     id,
     restaurant_id,
     restaurant_name,
-    settlement_report,
+    settlement_date,
     orders_count,
     orders_total_sum,
     orders_bonus_payment_sum,
@@ -14,7 +14,7 @@ SELECT
     fps.id,
     "do".restaurant_id,
     "dr".restaurant_name,
-    "dt".date as settlement_report,
+    "dt".date as settlement_date,
     fps.count as orders_count,
     fps.total_sum as orders_total_sum,
     fps.bonus_payment as orders_bonus_payment_sum,
@@ -26,7 +26,7 @@ JOIN dds.dm_orders as "do" on fps.order_id = "do".id
 JOIN dds.dm_products as "dp" on fps.product_id = "dp".id
 JOIN dds.dm_restaurants as "dr" on "dp".restaurant_id = "dr".id
 JOIN dds.dm_timestamps as "dt" on "do".timestamp_id = "dt".id
-ON CONFLICT (restaurant_id, settlement_report) DO UPDATE SET
+ON CONFLICT (restaurant_id, settlement_date) DO UPDATE SET
     id = EXCLUDED.id,
     orders_count = EXCLUDED.orders_count,
     orders_total_sum = EXCLUDED.orders_total_sum,
