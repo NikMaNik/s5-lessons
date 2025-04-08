@@ -11,10 +11,10 @@ alter table pubic.products add column id int ;
 alter table public.products add primary key (id); 
 
 -- Добавьте дату начала действия записи в products
-alter table public.products add column StartDate timestamptz;
+alter table public.products add column valid_from timestamptz;
 
 -- Добавьте дату окончания действия записи в products
-alter table public.products add column EndDate timestamptz;
+alter table public.products add column valid_to timestamptz;
 
 -- Добавьте новый внешний ключ sales_products_id_fk в sales
 alter table public.sales add constraint sales_products_id_fk Foreign key (product_id) references public.product_id (id);
