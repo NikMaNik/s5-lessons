@@ -1,6 +1,5 @@
 WITH aggregated_data AS (
     SELECT
-        fps.id,
         "dr".restaurant_id,
         "dr".restaurant_name,
         "dt".date::date as settlement_date,
@@ -22,7 +21,6 @@ WITH aggregated_data AS (
         "dt".date::date
 )
 INSERT INTO cdm.dm_settlement_report (
-    id,
     restaurant_id,
     restaurant_name,
     settlement_date,
@@ -34,7 +32,6 @@ INSERT INTO cdm.dm_settlement_report (
     restaurant_reward_sum
 )
 SELECT
-    id,
     restaurant_id,
     restaurant_name,
     settlement_date,
