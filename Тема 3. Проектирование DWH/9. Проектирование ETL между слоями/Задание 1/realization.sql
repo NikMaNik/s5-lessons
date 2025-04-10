@@ -18,6 +18,8 @@ WITH aggregated_data AS (
         "dr".restaurant_id,
         "dr".restaurant_name,
         "dt".date::date
+    ORDER BY 
+        settlement_date
 )
 INSERT INTO cdm.dm_settlement_report (
     restaurant_id,
