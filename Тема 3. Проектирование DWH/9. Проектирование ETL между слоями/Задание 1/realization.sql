@@ -1,24 +1,35 @@
 INSERT INTO cdm.dm_settlement_report (
     id,
-    settlement_date,
     restaurant_id,
-    total_order_amount,
+    restaurant_name,
+    settlement_date,
+    orders_count,
+    orders_total_sum,
+    orders_bonus_payment_sum,
+    orders_bonus_granted_sum,
     order_processing_fee,
     restaurant_reward_sum
 )
-SELECT
-    o.order_id AS settlement_id,
-    o.order_closed_at::date AS settlement_date,
-    r.restaurant_id,
-    SUM(o.total_amount) AS total_order_amount,
-    SUM(o.total_amount * 0.25) AS order_processing_fee,
-    SUM(o.total_amount - o.total_amount * 0.25 - COALESCE(bonus_payment_amount, 0)) AS restaurant_reward_sum
-FROM orders o
-JOIN restaurants r ON o.restaurant_id = r.restaurant_id
-LEFT JOIN bonus_payments bp ON o.order_id = bp.order_id
-WHERE o.status = 'closed'
-GROUP BY o.order_id, o.order_closed_at::date, r.restaurant_id
-ON CONFLICT (settlement_id, settlement_date, restaurant_id) DO UPDATE SET
-    total_order_amount = EXCLUDED.total_order_amount,
+SELECT 
+    fps.id,
+    "do".restaurant_id,
+    "dr".restaurant_name,
+    "dt".date::date as settlement_date,
+    fps.count as orders_count,
+    fps.total_sum as orders_total_sum,
+    fps.bonus_payment as orders_bonus_payment_sum,
+    fps.bonus_grant as orders_bonus_granted_sum,
+    fps.total_sum * 0.25 as order_processing_fee,
+    fps.total_sum - fps.total_sum * 0.25 - fps.bonus_payment as restaurant_reward_sum
+FROM dds.fct_product_sales as fps
+JOIN dds.dm_orders as "do" on fps.order_id = "do".id 
+JOIN dds.dm_products as "dp" on fps.product_id = "dp".id
+JOIN dds.dm_restaurants as "dr" on "dp".restaurant_id = "dr".id
+JOIN dds.dm_timestamps as "dt" on "do".timestamp_id = "dt".id
+ON CONFLICT (restaurant_id, settlement_date) DO UPDATE SET
+    orders_count = EXCLUDED.orders_count,
+    orders_total_sum = EXCLUDED.orders_total_sum,
+    orders_bonus_payment_sum = EXCLUDED.orders_bonus_payment_sum,
+    orders_bonus_granted_sum = EXCLUDED.orders_bonus_granted_sum,
     order_processing_fee = EXCLUDED.order_processing_fee,
     restaurant_reward_sum = EXCLUDED.restaurant_reward_sum;
