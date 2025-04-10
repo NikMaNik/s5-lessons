@@ -17,7 +17,8 @@ WITH aggregated_data AS (
     GROUP BY
         "dr".restaurant_id,
         "dr".restaurant_name,
-        "dt".date::date
+        "dt".date::date,
+        fps.count
     ORDER BY 
         settlement_date
 )
