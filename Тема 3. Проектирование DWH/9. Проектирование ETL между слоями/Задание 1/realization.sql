@@ -1,5 +1,5 @@
 INSERT INTO cdm.dm_settlement_report (
-    settlement_id,
+    id,
     settlement_date,
     restaurant_id,
     total_order_amount,
