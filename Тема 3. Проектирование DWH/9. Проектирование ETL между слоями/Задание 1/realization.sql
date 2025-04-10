@@ -39,6 +39,7 @@ SELECT
     restaurant_reward_sum
 FROM aggregated_data
 ON CONFLICT (restaurant_id, settlement_date) DO UPDATE SET
+    restaurant_name = EXCLUDED.restaurant_name
     orders_count = EXCLUDED.orders_count,
     orders_total_sum = EXCLUDED.orders_total_sum,
     orders_bonus_payment_sum = EXCLUDED.orders_bonus_payment_sum,
