@@ -18,12 +18,12 @@ WITH aggregated_data AS (
         "dr".restaurant_id,
         "dr".restaurant_name,
         "dt".date::date,
-        fps.count as orders_count,
-        fps.total_sum as orders_total_sum,
-        fps.bonus_payment as orders_bonus_payment_sum,
-        fps.bonus_grant as orders_bonus_granted_sum,
-        fps.total_sum * 0.25 as order_processing_fee,
-        fps.total_sum - fps.total_sum * 0.25 - fps.bonus_payment as restaurant_reward_sum
+        fps.count ,
+        fps.total_sum ,
+        fps.bonus_payment ,
+        fps.bonus_grant ,
+        fps.total_sum * 0.25 ,
+        fps.total_sum - fps.total_sum * 0.25 - fps.bonus_payment
 )
 
 INSERT INTO cdm.dm_settlement_report (
