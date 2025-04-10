@@ -15,7 +15,7 @@ WITH aggregated_data AS (
     JOIN dds.dm_restaurants as "dr" on "dp".restaurant_id = "dr".id
     JOIN dds.dm_timestamps as "dt" on "do".timestamp_id = "dt".id
     WHERE 
-        dds.dm_orders = 'closed'
+        "do".order_status = 'closed'
     GROUP BY
         "dr".restaurant_id,
         "dr".restaurant_name,
