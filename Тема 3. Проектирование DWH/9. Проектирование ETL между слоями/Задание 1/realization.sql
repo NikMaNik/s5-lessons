@@ -14,6 +14,16 @@ WITH aggregated_data AS (
     JOIN dds.dm_products as "dp" on fps.product_id = "dp".id
     JOIN dds.dm_restaurants as "dr" on "dp".restaurant_id = "dr".id
     JOIN dds.dm_timestamps as "dt" on "do".timestamp_id = "dt".id
+    GROUP BY
+        "dr".restaurant_id,
+        "dr".restaurant_name,
+        "dt".date::date,
+        fps.count as orders_count,
+        fps.total_sum as orders_total_sum,
+        fps.bonus_payment as orders_bonus_payment_sum,
+        fps.bonus_grant as orders_bonus_granted_sum,
+        fps.total_sum * 0.25 as order_processing_fee,
+        fps.total_sum - fps.total_sum * 0.25 - fps.bonus_payment as restaurant_reward_sum
 )
 
 INSERT INTO cdm.dm_settlement_report (
@@ -39,7 +49,6 @@ SELECT
     restaurant_reward_sum
 FROM aggregated_data
 ON CONFLICT (restaurant_id, settlement_date) DO UPDATE SET
-    restaurant_name = EXCLUDED.restaurant_name,
     orders_count = EXCLUDED.orders_count,
     orders_total_sum = EXCLUDED.orders_total_sum,
     orders_bonus_payment_sum = EXCLUDED.orders_bonus_payment_sum,
