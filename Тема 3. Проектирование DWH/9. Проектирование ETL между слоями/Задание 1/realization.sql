@@ -3,7 +3,7 @@ WITH aggregated_data AS (
         "dr".restaurant_id,
         "dr".restaurant_name,
         "dt".date::date as settlement_date,
-        COUNT(fps.count) as orders_count,
+        fps.count as orders_count,
         SUM(fps.total_sum) as orders_total_sum,
         SUM(fps.bonus_payment) as orders_bonus_payment_sum,
         SUM(fps.bonus_grant) as orders_bonus_granted_sum,
@@ -19,7 +19,8 @@ WITH aggregated_data AS (
     GROUP BY
         "dr".restaurant_id,
         "dr".restaurant_name,
-        "dt".date::date
+        "dt".date::date,
+        fps.count
     ORDER BY 
         settlement_date
 )
