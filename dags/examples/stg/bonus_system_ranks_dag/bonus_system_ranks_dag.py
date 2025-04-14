@@ -58,5 +58,4 @@ def sprint5_example_stg_bonus_system_users_dag():
     ranks_dict  # type: ignore
 
 stg_bonus_system_ranks_dag = sprint5_example_stg_bonus_system_ranks_dag()
-
 stg_bonus_system_users_dag = sprint5_example_stg_bonus_system_users_dag()
