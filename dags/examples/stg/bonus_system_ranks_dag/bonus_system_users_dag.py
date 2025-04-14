@@ -23,18 +23,17 @@ def sprint5_example_stg_bonus_system_ranks_dag():
     origin_pg_connect = ConnectionBuilder.pg_conn("PG_ORIGIN_BONUS_SYSTEM_CONNECTION")
 
     # Объявляем таск, который загружает данные.
-    @task(task_id="ranks_load")
-    def load_ranks():
+    @task(task_id="users_load")
+    def load_users():
         # создаем экземпляр класса, в котором реализована логика.
         rest_loader = RankLoader(origin_pg_connect, dwh_pg_connect, log)
-        rest_loader.load_ranks()  # Вызываем функцию, которая перельет данные.
+        rest_loader.load_users()  # Вызываем функцию, которая перельет данные.
 
     # Инициализируем объявленные таски.
-    ranks_dict = load_ranks()
-    
+    ranks_dict = load_users()
     # Далее задаем последовательность выполнения тасков.
     # Т.к. таск один, просто обозначим его здесь.
-    ranks_dict# type: ignore
+    ranks_dict 
 
 
 stg_bonus_system_ranks_dag = sprint5_example_stg_bonus_system_ranks_dag()
