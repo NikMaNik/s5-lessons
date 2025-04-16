@@ -56,7 +56,7 @@ class UserDestRepository:
 class UsersLoader:
     WF_KEY = "example_users_origin_to_stg_workflow"
     LAST_LOADED_ID_KEY = "last_loaded_id"
-    BATCH_LIMIT = 1  # Ограничение количества пользователей за итерацию
+    BATCH_LIMIT = 100  # Ограничение количества пользователей за итерацию
 
     def __init__(self, pg_origin: PgConnect, pg_dest: PgConnect, log: Logger) -> None:
         self.pg_dest = pg_dest
