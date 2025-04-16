@@ -7,7 +7,15 @@ from lib.dict_util import json2str
 from psycopg import Connection
 from psycopg.rows import class_row
 from pydantic import BaseModel
+from datetime import datetime
 
+
+class OutboxRecord(BaseModel):
+    id: int
+    object_id: int
+    record_ts: datetime
+    type_: str
+    payload: str
 
 class EventObj(BaseModel):
     id: int
@@ -16,26 +24,24 @@ class EventObj(BaseModel):
     event_value: str
 
 
-class EventsOriginRepository:
+class OutboxOriginRepository:
     def __init__(self, pg: PgConnect) -> None:
         self._db = pg
 
-    def list_events(self, event_threshold: int, limit: int) -> List[EventObj]:
-        with self._db.client().cursor(row_factory=class_row(EventObj)) as cur:
+    def list_records(self, threshold: int, limit: int) -> List[OutboxRecord]:
+        with self._db.client().cursor(row_factory=class_row(OutboxRecord)) as cur:
             cur.execute(
                 """
-                    SELECT id, event_ts, event_type, event_value
+                    SELECT id, object_id, record_ts, type AS type_, payload
                     FROM outbox
-                    WHERE id > %(threshold)s -- пропускаем уже обработанные события
-                    ORDER BY id ASC -- обязательная сортировка по id
-                    LIMIT %(limit)s; -- обрабатываем ограниченное количество записей
-                """, {
-                    "threshold": event_threshold,
-                    "limit": limit
-                }
+                    WHERE id > %s -- берем только новые записи
+                    ORDER BY id ASC -- упорядочиваем по возрастанию id
+                    LIMIT %s; -- устанавливаем ограничение на число возвращаемых записей
+                """,
+                (threshold, limit),
             )
-            objs = cur.fetchall()
-        return objs
+            records = cur.fetchall()
+        return records
     
 
 
@@ -48,8 +54,8 @@ class EventDestRepository:
                     VALUES (%(id)s, %(event_ts)s, %(event_type)s, %(event_value)s)
                     ON CONFLICT (id) DO UPDATE
                     SET
-                        event_ts = EXCLUDED.event_ts;
-                        event_type = EXCLUDED.event_type;
+                        event_ts = EXCLUDED.event_ts,
+                        event_type = EXCLUDED.event_type,
                         event_value = EXCLUDED.event_value;
                 """,
                 {
@@ -60,15 +66,14 @@ class EventDestRepository:
                 },
             )
 
-
 class EventsLoader:
     WF_KEY = "example_outbox_to_stg_workflow"
     LAST_LOADED_ID_KEY = "last_loaded_id"
-    BATCH_LIMIT = 100  # Лимит строк за одно выполнение
+    BATCH_LIMIT = 100  # Число записей, которое будет обрабатывать за один запуск
 
     def __init__(self, pg_origin: PgConnect, pg_dest: PgConnect, log: Logger) -> None:
         self.pg_dest = pg_dest
-        self.origin = EventsOriginRepository(pg_origin)
+        self.origin = OutboxOriginRepository(pg_origin)
         self.stg = EventDestRepository()
         self.settings_repository = StgEtlSettingsRepository()
         self.log = log
@@ -80,17 +85,29 @@ class EventsLoader:
                 wf_setting = EtlSetting(id=0, workflow_key=self.WF_KEY, workflow_settings={self.LAST_LOADED_ID_KEY: -1})
             
             last_loaded = wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY]
-            load_queue = self.origin.list_events(last_loaded, self.BATCH_LIMIT)
-            self.log.info(f"Found {len(load_queue)} events to load.")
+            load_queue = self.origin.list_records(last_loaded, self.BATCH_LIMIT)
+            self.log.info(f"Found {len(load_queue)} records to process.")
             if not load_queue:
-                self.log.info("No new events found.")
+                self.log.info("No new data available.")
                 return
             
-            for event in load_queue:
+            # Преобразование каждого элемента из списка в объект для загрузки
+            transformed_data = [
+                EventObj(
+                    id=r.id,
+                    event_ts=r.record_ts,
+                    event_type=r.type_,
+                    event_value=r.payload
+                ) for r in load_queue
+            ]
+            
+            # Сохраняем преобразованные данные в целевую таблицу
+            for event in transformed_data:
                 self.stg.insert_event(conn, event)
         
-            wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY] = max([ev.id for ev in load_queue])
+            # Сохраняем прогресс в настройках
+            wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY] = max([r.id for r in load_queue])
             wf_setting_json = json2str(wf_setting.workflow_settings)
             self.settings_repository.save_setting(conn, wf_setting.workflow_key, wf_setting_json)
 
-            self.log.info(f"Load finished on {wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY]}")
+            self.log.info(f"Load completed up to ID {wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY]}.")
