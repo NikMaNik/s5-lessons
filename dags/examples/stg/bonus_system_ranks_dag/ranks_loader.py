@@ -95,7 +95,8 @@ class RankDestRepository:
                     SET 
                         id = EXCLUDED.id,
                         order_user_id = EXCLUDED.order_user_id
-                """, {
+                """, 
+                {
                     "id": user.id,
                     "order_user_id": user.order_user_id
                 },
