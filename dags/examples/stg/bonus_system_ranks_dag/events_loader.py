@@ -10,13 +10,6 @@ from pydantic import BaseModel
 from datetime import datetime
 
 
-class OutboxRecord(BaseModel):
-    id: int
-    object_id: int
-    record_ts: datetime
-    type_: str
-    payload: str
-
 class EventObj(BaseModel):
     id: int
     event_ts: datetime
@@ -28,11 +21,11 @@ class OutboxOriginRepository:
     def __init__(self, pg: PgConnect) -> None:
         self._db = pg
 
-    def list_records(self, threshold: int, limit: int) -> List[OutboxRecord]:
-        with self._db.client().cursor(row_factory=class_row(OutboxRecord)) as cur:
+    def list_records(self, threshold: int, limit: int) -> List[EventObj]:
+        with self._db.client().cursor(row_factory=class_row(EventObj)) as cur:
             cur.execute(
                 """
-                    SELECT id, object_id, record_ts, type AS type_, payload
+                    SELECT id, event_ts, event_type, event_value
                     FROM outbox
                     WHERE id > %s -- берем только новые записи
                     ORDER BY id ASC -- упорядочиваем по возрастанию id
@@ -91,18 +84,8 @@ class EventsLoader:
                 self.log.info("No new data available.")
                 return
             
-            # Преобразование каждого элемента из списка в объект для загрузки
-            transformed_data = [
-                EventObj(
-                    id=r.id,
-                    event_ts=r.record_ts,
-                    event_type=r.type_,
-                    event_value=r.payload
-                ) for r in load_queue
-            ]
-            
             # Сохраняем преобразованные данные в целевую таблицу
-            for event in transformed_data:
+            for event in load_queue:
                 self.stg.insert_event(conn, event)
         
             # Сохраняем прогресс в настройках
