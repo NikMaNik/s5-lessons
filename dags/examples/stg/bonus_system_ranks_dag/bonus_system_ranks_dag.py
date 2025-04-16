@@ -32,9 +32,15 @@ def sprint5_example_stg_bonus_system_ranks_dag():
     # Инициализируем объявленные таски.
     ranks_dict = load_ranks()
     
-    # Далее задаем последовательность выполнения тасков.
-    # Т.к. таск один, просто обозначим его здесь.
-    ranks_dict# type: ignore
+    @task(task_id="users_load")
+    def load_users():
+        # создаём инстанс класса для загрузки пользователей
+        users_loader = UsersLoader(origin_pg_connect, dwh_pg_connect, log)
+        users_loader.load_users()
 
+    # Дописываем новую задачу в основной поток исполнения DAG'a
+    users_task = load_users()
 
-stg_bonus_system_ranks_dag = sprint5_example_stg_bonus_system_ranks_dag()
+    # Последовательность выполнения шагов DAG-a теперь следующая:
+    ranks_dict >> users_task
+
