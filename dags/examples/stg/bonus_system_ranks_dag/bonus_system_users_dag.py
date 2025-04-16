@@ -30,10 +30,11 @@ def sprint5_example_stg_bonus_system_users_dag():
         rest_loader.load_users()  # Вызываем функцию, которая перельет данные.
 
     # Инициализируем объявленные таски.
-    ranks_dict = load_users()
+    user_dict = load_users()
     # Далее задаем последовательность выполнения тасков.
     # Т.к. таск один, просто обозначим его здесь.
-    ranks_dict 
+    user_dict 
 
 
 stg_bonus_system_users_dag = sprint5_example_stg_bonus_system_users_dag()
+
