@@ -24,7 +24,7 @@ class EventsOriginRepository:
         with self._db.client().cursor(row_factory=class_row(EventObj)) as cur:
             cur.execute(
                 """
-                    SELECT id, record_ts as event_ts, type as event_type, payload as event_value
+                    SELECT id, event_ts, event_type, event_value
                     FROM outbox
                     WHERE id > %(threshold)s -- пропускаем уже обработанные события
                     ORDER BY id ASC -- обязательная сортировка по id
