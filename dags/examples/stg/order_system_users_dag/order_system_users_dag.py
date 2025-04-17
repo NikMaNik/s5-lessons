@@ -47,10 +47,10 @@ def sprint5_example_stg_order_system_users():
         # Запускаем копирование данных.
         loader.run_copy()
 
-    restaurant_loader = load_users()
+    user_loader = load_users()
 
     # Задаем порядок выполнения. Таск только один, поэтому зависимостей нет.
-    restaurant_loader  # type: ignore
+    user_loader  # type: ignore
 
 
 order_stg_dag = sprint5_example_stg_order_system_users()  # noqa
