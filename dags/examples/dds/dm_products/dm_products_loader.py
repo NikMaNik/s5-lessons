@@ -58,6 +58,20 @@ class ProductOriginRepository:
 class ProductDestRepository:
 
     def insert_product(self, conn: Connection, rank, log) -> None:
+        with conn.cursor() as cur:
+                cur.execute(
+                    """
+                        SELECT id 
+                        FROM dds.dm_restaurants
+                        where restaurant_id == %(restaraunt_id)s
+                    """,
+                    {
+                        "restaraunt_id": rank['restaraunt']['id']
+                    }
+                )
+                obj = cur.fetchall()
+                restaraunt_id = obj[0]
+
         for order_item in rank['order_items']:
 
             log.info(f'''
@@ -67,6 +81,8 @@ class ProductDestRepository:
                         "restaurant_id": {rank['restaurant']['id']},
                         "active_from": {rank['update_ts']}
                     ''')
+            
+            
             with conn.cursor() as cur:
                 cur.execute(
                     """
@@ -75,7 +91,7 @@ class ProductDestRepository:
     
                     """,
                     {
-                        "restaurant_id": rank['restaurant']['id'],
+                        "restaurant_id": restaraunt_id,
                         "product_id": order_item['id'],
                         "product_name": order_item['name'],
                         "product_price": order_item['price'],
