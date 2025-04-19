@@ -65,7 +65,7 @@ class TimestampDestRepository:
             cur.execute(
                 """
                     INSERT INTO dds.dm_timestamps(ts, year, month, day, time, date)
-                    VALUES (%(ts)s, %(year)s, %(month)s, %(day)s), %(time)s), %(date)s);
+                    VALUES (%(ts)s, %(year)s, %(month)s, %(day)s, %(time)s), %(date)s);
  
                 """,
                 {
