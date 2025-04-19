@@ -34,8 +34,6 @@ class UserOriginRepository:
                 }
             )
             objs = cur.fetchall()
-            print(objs)
-            objs = str2json(objs)
         return objs
     
 
