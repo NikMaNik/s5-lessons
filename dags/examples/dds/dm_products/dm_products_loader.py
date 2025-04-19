@@ -47,11 +47,6 @@ class ProductOriginRepository:
             max_id = 0
             for row in objs:
                 obj = str2json(row[1])
-                # order = str2json(obj['order_items'])
-                # restaurant = str2json(obj['restaurant'])
-                # update_ts = obj['update_ts']
-                # order['restaurant_id'] = restaurant['id']
-                # order['update_ts'] = update_ts
                 max_id = row[0]
                 result.append(obj)
             self.log.info(f"obj = {result}")
@@ -63,27 +58,29 @@ class ProductOriginRepository:
 class ProductDestRepository:
 
     def insert_product(self, conn: Connection, rank, log) -> None:
-        log.info(f'''
-                    "product_id": {rank['id']},
-                    "product_name": {rank['name']},
-                    "product_price": {rank['price']},
-                    "restaurant_id": {rank['restaurant_id']}''')
-        with conn.cursor() as cur:
-            cur.execute(
-                """
-                    INSERT INTO dds.dm_products(restaurant_id, product_id, product_name, product_price, active_from, active_to)
-                    VALUES (%(restaurant_id)s, %(product_id)s, %(product_name)s, %(product_price)s, %(active_from)s, %(active_to)s);
- 
-                """,
-                {
-                    "restaurant_id": rank['restaurant_id'],
-                    "product_id": rank['id'],
-                    "product_name": rank['name'],
-                    "product_price": rank['price'],
-                    "active_from": rank['update_ts'],
-                    "active_to" :datetime(2099, 12, 31, 0, 0, 0)
-                },
-            )
+        for order_item in rank['order_items']:
+
+            log.info(f'''
+                        "product_id": {order_item['id']},
+                        "product_name": {order_item['name']},
+                        "product_price": {order_item['price']},
+                        "restaurant_id": {rank['restaurant_id']}''')
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                        INSERT INTO dds.dm_products(restaurant_id, product_id, product_name, product_price, active_from, active_to)
+                        VALUES (%(restaurant_id)s, %(product_id)s, %(product_name)s, %(product_price)s, %(active_from)s, %(active_to)s);
+    
+                    """,
+                    {
+                        "restaurant_id": rank['restaurant_id'],
+                        "product_id": rank['id'],
+                        "product_name": rank['name'],
+                        "product_price": rank['price'],
+                        "active_from": rank['update_ts'],
+                        "active_to" :datetime(2099, 12, 31, 0, 0, 0)
+                    },
+                )
 
 class ProductLoader:
     WF_KEY = "example_dm_product_workflow"
