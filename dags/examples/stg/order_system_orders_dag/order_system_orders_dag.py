@@ -47,10 +47,10 @@ def sprint5_example_stg_order_system_orders():
         # Запускаем копирование данных.
         loader.run_copy()
 
-    restaurant_loader = load_orders()
+    order_loader = load_orders()
 
     # Задаем порядок выполнения. Таск только один, поэтому зависимостей нет.
-    restaurant_loader  # type: ignore
+    order_loader  # type: ignore
 
 
 order_stg_dag = sprint5_example_stg_order_system_orders()  # noqa
