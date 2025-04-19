@@ -40,6 +40,7 @@ class UserOriginRepository:
             )
 
             objs = cur.fetchall()
+            objs = str2json(objs)
             self.log.info(f"{objs}")
         return objs
     
