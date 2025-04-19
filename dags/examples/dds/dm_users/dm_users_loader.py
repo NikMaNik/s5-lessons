@@ -25,7 +25,7 @@ class UserOriginRepository:
             cur.execute(
                 """
                     SELECT object_value
-                    FROM stg.ordersystem_users
+                    FROM ordersystem_users
                     WHERE id > %(threshold)s --Пропускаем те объекты, которые уже загрузили.
                     ORDER BY id ASC --Обязательна сортировка по id, т.к. id используем в качестве курсора.
                     LIMIT %(limit)s; --Обрабатываем только одну пачку объектов.
