@@ -54,7 +54,7 @@ class UserDestRepository:
                 {
                     "user_id": user.user_id,
                     "user_name": user.user_name,
-                    "user_login": user.iser_login,
+                    "user_login": user.user_login,
                 },
             )
 
@@ -92,7 +92,6 @@ class UserLoader:
 
             # Сохраняем объекты в базу dwh.
             for user in load_queue:
-                user = str2json(user)
                 self.dds.insert_user(conn, user)
 
             # Сохраняем прогресс.
