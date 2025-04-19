@@ -66,7 +66,7 @@ class ProductDestRepository:
                         where restaurant_id == %(restaraunt_id)s
                     """,
                     {
-                        "restaraunt_id": rank['restaraunt']['id']
+                        "restaraunt_id": rank['restaurant']['id']
                     }
                 )
                 obj = cur.fetchall()
