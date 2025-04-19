@@ -106,6 +106,7 @@ class UserLoader:
 
             # Сохраняем объекты в базу dwh.
             for user in load_queue:
+                self.log.info(f"{user}")
                 self.dds.insert_user(conn, user)
 
             # Сохраняем прогресс.
