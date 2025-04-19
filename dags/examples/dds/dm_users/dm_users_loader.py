@@ -70,7 +70,7 @@ class UserLoader:
 
     def __init__(self, pg_origin: PgConnect, pg_dest: PgConnect, log: Logger) -> None:
         self.pg_dest = pg_dest
-        self.origin = UserOriginRepository(pg_origin)
+        self.origin = UserOriginRepository(pg_origin, log)
         self.dds = UserDestRepository()
         self.settings_repository = DdsEtlSettingsRepository()
         self.log = log
