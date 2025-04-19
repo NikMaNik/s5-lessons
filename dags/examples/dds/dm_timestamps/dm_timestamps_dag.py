@@ -2,7 +2,7 @@ import logging
 
 import pendulum
 from airflow.decorators import dag, task
-from dags.examples.dds.dm_timestamps.dm_timestamps_loader import TimestamptLoader
+from examples.dds.dm_timestamps.dm_timestamps_loader import TimestamptLoader
 from lib import ConnectionBuilder
 
 log = logging.getLogger(__name__)
