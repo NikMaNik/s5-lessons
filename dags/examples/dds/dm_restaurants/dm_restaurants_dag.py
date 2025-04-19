@@ -30,10 +30,10 @@ def sprint5_example_dds_restaurants_dag():
         events_loader.load_restaurant()
 
     # Подключаем задачу загрузки событий в цепочку зависимостей
-    dm_users_task = load_restaurants()
+    dm_restaurants_task = load_restaurants()
 
     # Теперь порядок выполнения операций следующий:
-    dm_users_task
+    dm_restaurants_task
     
 
 stg_bonus_system_ranks_dag = sprint5_example_dds_restaurants_dag()
