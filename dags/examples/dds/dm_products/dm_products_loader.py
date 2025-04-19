@@ -76,9 +76,9 @@ class ProductDestRepository:
                     """,
                     {
                         "restaurant_id": rank['restaurant']['id'],
-                        "product_id": rank['id'],
-                        "product_name": rank['name'],
-                        "product_price": rank['price'],
+                        "product_id": order_item['id'],
+                        "product_name": order_item['name'],
+                        "product_price": order_item['price'],
                         "active_from": rank['update_ts'],
                         "active_to" :datetime(2099, 12, 31, 0, 0, 0)
                     },
