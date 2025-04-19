@@ -29,7 +29,7 @@ class ProductOriginRepository:
             cur.execute(
                 """
                     SELECT id, object_value
-                    FROM stg.ordersystem_restaurants
+                    FROM stg.ordersystem_orders
                     WHERE id > %(threshold)s --Пропускаем те объекты, которые уже загрузили.
                     ORDER BY id ASC --Обязательна сортировка по id, т.к. id используем в качестве курсора.
                     LIMIT %(limit)s; --Обрабатываем только одну пачку объектов.
@@ -71,7 +71,7 @@ class ProductDestRepository:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                    INSERT INTO dds.dm_restaurants(restaurant_id, product_id, product_name, product_price, active_from, active_to)
+                    INSERT INTO dds.dm_products(restaurant_id, product_id, product_name, product_price, active_from, active_to)
                     VALUES (%(restaurant_id)s, %(product_id)s, %(product_name)s, %(product_price)s, %(active_from)s, %(active_to)s);
  
                 """,
