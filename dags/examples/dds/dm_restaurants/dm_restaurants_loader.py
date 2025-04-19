@@ -65,7 +65,7 @@ class RestaurantDestRepository:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                    INSERT INTO dds.restaurants(restaurant_id, restaurant_name, active_from, active_to)
+                    INSERT INTO dds.dm_restaurants(restaurant_id, restaurant_name, active_from, active_to)
                     VALUES (%(restaurant_id)s, %(restaurant_name)s, %(active_from)s, %(active_to)s);
  
                 """,
