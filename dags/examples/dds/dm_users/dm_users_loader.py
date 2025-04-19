@@ -87,7 +87,7 @@ class UserLoader:
             # Если настройки еще нет, заводим ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             if not wf_setting:
-                wf_setting = EtlSetting(id=0, workflow_key=self.WF_KEY, workflow_settings={self.LAST_LOADED_ID_KEY: -1})
+                wf_setting = EtlSetting(id=0, workflow_key=self.WF_KEY, workflow_settings={self.LAST_LOADED_ID_KEY: 0})
 
             # Вычитываем очередную пачку объектов.
             last_loaded = wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY]
