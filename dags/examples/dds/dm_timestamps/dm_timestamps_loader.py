@@ -11,25 +11,22 @@ from pydantic import BaseModel
 
 class UserObj(BaseModel):
     id: int
-    _id: str
-    menu: str
-    name: str
-    update_ts: datetime
+    date: datetime
 
 
-class RestaurantOriginRepository:
+class TimestamptOriginRepository:
     def __init__(self, pg: PgConnect, log) -> None:
         self._db = pg
         self.log = log
 
-    def list_restaurants(self, rank_threshold: int, limit: int) -> List[UserObj]:
+    def list_timestamps(self, rank_threshold: int, limit: int) -> List[UserObj]:
         with self._db.client().cursor() as cur:
             self.log.info(f"{rank_threshold}")
             self.log.info(f"{limit}")
             cur.execute(
                 """
                     SELECT id, object_value
-                    FROM stg.ordersystem_restaurants
+                    FROM stg.ordersystem_orders
                     WHERE id > %(threshold)s --Пропускаем те объекты, которые уже загрузили.
                     ORDER BY id ASC --Обязательна сортировка по id, т.к. id используем в качестве курсора.
                     LIMIT %(limit)s; --Обрабатываем только одну пачку объектов.
@@ -47,50 +44,57 @@ class RestaurantOriginRepository:
             max_id = 0
             for row in objs:
                 obj = str2json(row[1])
-                max_id = row[0]
-                result.append(obj)
+                if obj['final_status'] == 'CLOSED' or obj['final_status'] == 'CANCELLED':
+                    max_id = row[0]
+                    result.append(obj)
             self.log.info(f"obj = {result}")
             self.log.info(f"max_id = {max_id}")
         return result, max_id
     
 
 
-class RestaurantDestRepository:
+class TimestampDestRepository:
 
-    def insert_restaurant(self, conn: Connection, restaurant, log) -> None:
+    def insert_timestamps(self, conn: Connection, timestamps, log) -> None:
         log.info(f'''
-                    "restaurant_id": {restaurant['_id']},
-                    "restaurant_name": {restaurant['name']},
-                    "active_from": {restaurant['update_ts']}''')
+                    "restaurant_id": {timestamps['date']},
+                    "year": {timestamps['name']},
+                    "month": {timestamps['update_ts']},
+                    "day": {timestamps},
+                    "time": {timestamps},
+                    "date": {timestamps}
+                 ''')
         with conn.cursor() as cur:
             cur.execute(
                 """
-                    INSERT INTO dds.dm_restaurants(restaurant_id, restaurant_name, active_from, active_to)
-                    VALUES (%(restaurant_id)s, %(restaurant_name)s, %(active_from)s, %(active_to)s);
+                    INSERT INTO dds.dm_timestamps(ts, year, month, day, time, date)
+                    VALUES (%(ts)s, %(year)s, %(month)s, %(day)s), %(time)s), %(date)s);
  
                 """,
                 {
-                    "restaurant_id": restaurant['_id'],
-                    "restaurant_name": restaurant['name'],
-                    "active_from": restaurant['update_ts'],
-                    "active_to": datetime(2099, 12, 31, 0, 0, 0)
+                    "restaurant_id": timestamps['_id'],
+                    "year": timestamps['name'],
+                    "month": timestamps['update_ts'],
+                    "day": timestamps,
+                    "time": timestamps,
+                    "date": timestamps
 
                 },
             )
 
-class RestaurantLoader:
-    WF_KEY = "example_dm_restaurants_workflow"
+class TimestamptLoader:
+    WF_KEY = "example_dm_timestamp_workflow"
     LAST_LOADED_ID_KEY = "last_loaded_id"
     BATCH_LIMIT = 100  # Рангов мало, но мы хотим продемонстрировать инкрементальную загрузку рангов.
 
     def __init__(self, pg_origin: PgConnect, pg_dest: PgConnect, log: Logger) -> None:
         self.pg_dest = pg_dest
-        self.origin = RestaurantOriginRepository(pg_origin, log)
-        self.dds = RestaurantDestRepository()
+        self.origin = TimestamptOriginRepository(pg_origin, log)
+        self.dds = TimestampDestRepository()
         self.settings_repository = DdsEtlSettingsRepository()
         self.log = log
 
-    def load_restaurant(self):
+    def load_timestmap(self):
         # открываем транзакцию.
         # Транзакция будет закоммичена, если код в блоке with пройдет успешно (т.е. без ошибок).
         # Если возникнет ошибка, произойдет откат изменений (rollback транзакции).
@@ -104,16 +108,16 @@ class RestaurantLoader:
 
             # Вычитываем очередную пачку объектов.
             last_loaded = wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY]
-            load_queue, max_id = self.origin.list_restaurants(last_loaded, self.BATCH_LIMIT)
+            load_queue, max_id = self.origin.list_timestamps(last_loaded, self.BATCH_LIMIT)
             self.log.info(f"Found {len(load_queue)} ranks to load.")
             if not load_queue:
                 self.log.info("Quitting.")
                 return
 
             # Сохраняем объекты в базу dwh.
-            for user in load_queue:
-                self.log.info(f"{user}")
-                self.dds.insert_restaurant(conn, user, self.log)
+            for row in load_queue:
+                self.log.info(f"{row}")
+                self.dds.insert_timestamps(conn, row, self.log)
 
             # Сохраняем прогресс.
             # Мы пользуемся тем же connection, поэтому настройка сохранится вместе с объектами,

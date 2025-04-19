@@ -2,7 +2,7 @@ import logging
 
 import pendulum
 from airflow.decorators import dag, task
-from examples.dds.dm_restaurants.dm_restaurants_loader import RestaurantLoader
+from dags.examples.dds.dm_timestamps.dm_timestamps_loader import TimestamptLoader
 from lib import ConnectionBuilder
 
 log = logging.getLogger(__name__)
@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
     is_paused_upon_creation=True  # Остановлен/запущен при появлении. Сразу запущен.
 )
 
-def sprint5_example_dds_restaurants_dag():
+def sprint5_example_dds_timestamps_dag():
     # Создаем подключение к базе dwh.
     dwh_pg_connect = ConnectionBuilder.pg_conn("PG_WAREHOUSE_CONNECTION")
 
@@ -24,16 +24,16 @@ def sprint5_example_dds_restaurants_dag():
     # origin_pg_connect = ConnectionBuilder.pg_conn("PG_ORIGIN_BONUS_SYSTEM_CONNECTION")
 
     # Объявляем таск, который загружает данные.
-    @task(task_id="restaurants_load")
+    @task(task_id="timestamp_load")
     def load_restaurants():
-        events_loader = RestaurantLoader(dwh_pg_connect, dwh_pg_connect, log)
-        events_loader.load_restaurant()
+        events_loader = TimestamptLoader(dwh_pg_connect, dwh_pg_connect, log)
+        events_loader.load_timestmap()
 
     # Подключаем задачу загрузки событий в цепочку зависимостей
-    dm_restaurants_task = load_restaurants()
+    dm_timestamp_task = load_restaurants()
 
     # Теперь порядок выполнения операций следующий:
-    dm_restaurants_task
+    dm_timestamp_task
     
 
-stg_bonus_system_ranks_dag = sprint5_example_dds_restaurants_dag()
+stg_bonus_system_ranks_dag = sprint5_example_dds_timestamps_dag()
