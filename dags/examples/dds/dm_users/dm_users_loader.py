@@ -41,6 +41,7 @@ class UserOriginRepository:
 
             objs = cur.fetchall()
             self.log.info(f"{objs}")
+
             result = []
 
             for row in objs:
@@ -65,7 +66,7 @@ class UserDestRepository:
                         user_login = EXCLUDED.user_login;
                 """,
                 {
-                    "user_id": user.id,
+                    "user_id": user._id,
                     "user_name": user.name,
                     "user_login": user.login
                 },
