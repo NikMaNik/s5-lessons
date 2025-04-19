@@ -22,7 +22,7 @@ class RestaurantOriginRepository:
         self._db = pg
         self.log = log
 
-    def list_users(self, rank_threshold: int, limit: int) -> List[UserObj]:
+    def list_restaurants(self, rank_threshold: int, limit: int) -> List[UserObj]:
         with self._db.client().cursor() as cur:
             self.log.info(f"{rank_threshold}")
             self.log.info(f"{limit}")
@@ -104,7 +104,7 @@ class RestaurantLoader:
 
             # Вычитываем очередную пачку объектов.
             last_loaded = wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY]
-            load_queue, max_id = self.origin.list_users(last_loaded, self.BATCH_LIMIT)
+            load_queue, max_id = self.origin.list_restaurants(last_loaded, self.BATCH_LIMIT)
             self.log.info(f"Found {len(load_queue)} ranks to load.")
             if not load_queue:
                 self.log.info("Quitting.")
@@ -113,7 +113,7 @@ class RestaurantLoader:
             # Сохраняем объекты в базу dwh.
             for user in load_queue:
                 self.log.info(f"{user}")
-                self.dds.insert_user(conn, user, self.log)
+                self.dds.insert_restaurant(conn, user, self.log)
 
             # Сохраняем прогресс.
             # Мы пользуемся тем же connection, поэтому настройка сохранится вместе с объектами,
