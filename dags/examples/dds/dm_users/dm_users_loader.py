@@ -10,6 +10,7 @@ from pydantic import BaseModel
 
 
 class UserObj(BaseModel):
+    id: int
     _id: str
     login: str
     name: str
@@ -27,7 +28,7 @@ class UserOriginRepository:
             self.log.info(f"{limit}")
             cur.execute(
                 """
-                    SELECT object_value
+                    SELECT id, object_value
                     FROM stg.ordersystem_users
                     WHERE id > %(threshold)s --Пропускаем те объекты, которые уже загрузили.
                     ORDER BY id ASC --Обязательна сортировка по id, т.к. id используем в качестве курсора.
@@ -95,7 +96,7 @@ class UserLoader:
             # Если настройки еще нет, заводим ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             if not wf_setting:
-                wf_setting = EtlSetting(id=0, workflow_key=self.WF_KEY, workflow_settings={self.LAST_LOADED_ID_KEY: 0})
+                wf_setting = EtlSetting(id=0, workflow_key=self.WF_KEY, workflow_settings={self.LAST_LOADED_ID_KEY: -1})
 
             # Вычитываем очередную пачку объектов.
             last_loaded = wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY]
