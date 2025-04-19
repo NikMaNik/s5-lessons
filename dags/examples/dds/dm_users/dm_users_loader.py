@@ -22,7 +22,7 @@ class UserOriginRepository:
         self.log = log
 
     def list_users(self, rank_threshold: int, limit: int) -> List[UserObj]:
-        with self._db.client().cursor(row_factory=class_row(UserObj)) as cur:
+        with self._db.client().cursor() as cur:
             self.log.info(f"{rank_threshold}")
             self.log.info(f"{limit}")
             cur.execute(
