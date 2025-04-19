@@ -64,7 +64,7 @@ class ProductDestRepository:
                         "product_id": {order_item['id']},
                         "product_name": {order_item['name']},
                         "product_price": {order_item['price']},
-                        "restaurant_id": {rank['restaurant_id']}''')
+                        "restaurant_id": {rank['restaurant']['id']}''')
             with conn.cursor() as cur:
                 cur.execute(
                     """
