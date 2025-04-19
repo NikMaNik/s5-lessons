@@ -12,7 +12,7 @@ class PgSaver:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                    INSERT INTO stg.ordersystem_rusers(object_id, object_value, update_ts)
+                    INSERT INTO stg.ordersystem_users(object_id, object_value, update_ts)
                     VALUES (%(id)s, %(val)s, %(update_ts)s)
                     ON CONFLICT (object_id) DO UPDATE
                     SET
