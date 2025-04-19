@@ -11,7 +11,7 @@ class EtlSetting(BaseModel):
     workflow_settings: Dict
 
 
-class StgEtlSettingsRepository:
+class DdsEtlSettingsRepository:
     def get_setting(self, conn: Connection, etl_key: str) -> Optional[EtlSetting]:
         with conn.cursor(row_factory=class_row(EtlSetting)) as cur:
             cur.execute(

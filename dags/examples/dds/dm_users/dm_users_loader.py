@@ -1,7 +1,7 @@
 from logging import Logger
 from typing import List
 
-from examples.dds import EtlSetting, StgEtlSettingsRepository
+from examples.dds import EtlSetting, DdsEtlSettingsRepository
 from lib import PgConnect
 from lib.dict_util import json2str, str2json
 from psycopg import Connection
@@ -24,7 +24,7 @@ class UserOriginRepository:
             cur.execute(
                 """
                     SELECT object_value
-                    FROM stg.ordersystem_users
+                    FROM ordersystem_users
                     WHERE id > %(threshold)s --Пропускаем те объекты, которые уже загрузили.
                     ORDER BY id ASC --Обязательна сортировка по id, т.к. id используем в качестве курсора.
                     LIMIT %(limit)s; --Обрабатываем только одну пачку объектов.
@@ -67,7 +67,7 @@ class UserLoader:
         self.pg_dest = pg_dest
         self.origin = UserOriginRepository(pg_origin)
         self.dds = UserDestRepository()
-        self.settings_repository = StgEtlSettingsRepository()
+        self.settings_repository = DdsEtlSettingsRepository()
         self.log = log
 
     def load_users(self):
