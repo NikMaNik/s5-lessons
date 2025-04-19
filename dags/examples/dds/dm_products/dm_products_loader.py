@@ -47,13 +47,13 @@ class ProductOriginRepository:
             max_id = 0
             for row in objs:
                 obj = str2json(row[1])
-                order = str2json(obj['order_items'])
-                restaurant = str2json(obj['restaurant'])
-                update_ts = obj['update_ts']
-                order['restaurant_id'] = restaurant['id']
-                order['update_ts'] = update_ts
+                # order = str2json(obj['order_items'])
+                # restaurant = str2json(obj['restaurant'])
+                # update_ts = obj['update_ts']
+                # order['restaurant_id'] = restaurant['id']
+                # order['update_ts'] = update_ts
                 max_id = row[0]
-                result.append(order)
+                result.append(obj)
             self.log.info(f"obj = {result}")
             self.log.info(f"max_id = {max_id}")
         return result, max_id
