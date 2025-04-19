@@ -1,1 +1,1 @@
-from .stg_settings_repository import EtlSetting, DdsEtlSettingsRepository  # noqa
+from .dds_settings_repository import EtlSetting, DdsEtlSettingsRepository  # noqa
