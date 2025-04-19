@@ -44,11 +44,11 @@ class UserOriginRepository:
             
 
             result = []
-            self.log.info(f"{result}")
+            
             for row in objs:
                 obj = str2json(row[1])
                 result.append(obj)
-            
+            self.log.info(f"{result}")
         return result
     
 
