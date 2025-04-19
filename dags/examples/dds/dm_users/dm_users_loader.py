@@ -54,7 +54,7 @@ class UserOriginRepository:
 
 class UserDestRepository:
 
-    def insert_user(self, conn: Connection, user) -> None:
+    def insert_user(self, conn: Connection, user, log) -> None:
         self.log.info(f'''
                     "user_id": {user['_id']},
                     "user_name": {user['name']},
@@ -110,7 +110,7 @@ class UserLoader:
             # Сохраняем объекты в базу dwh.
             for user in load_queue:
                 self.log.info(f"{user}")
-                self.dds.insert_user(conn, user)
+                self.dds.insert_user(conn, user, self.log)
 
             # Сохраняем прогресс.
             # Мы пользуемся тем же connection, поэтому настройка сохранится вместе с объектами,
