@@ -2,7 +2,7 @@ import logging
 
 import pendulum
 from airflow.decorators import dag, task
-from examples.dds.dm_products.dm_products_dag import ProductLoader
+from examples.dds.dm_products.dm_products_loader import ProductLoader
 from lib import ConnectionBuilder
 
 log = logging.getLogger(__name__)
