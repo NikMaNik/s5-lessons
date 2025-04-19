@@ -58,11 +58,11 @@ class TimestampDestRepository:
     def insert_timestamps(self, conn: Connection, timestamps, log) -> None:
         log.info(f'''
                     "restaurant_id": {timestamps['date']},
-                    "year": {timestamps['name']},
-                    "month": {timestamps['update_ts']},
-                    "day": {timestamps},
-                    "time": {timestamps},
-                    "date": {timestamps}
+                    "year": {timestamps['date'].year},
+                    "month": {timestamps['date'].month},
+                    "day": {timestamps['date'].day},
+                    "time": {timestamps['date'].time},
+                    "date": {timestamps['date'].date}
                  ''')
         with conn.cursor() as cur:
             cur.execute(
