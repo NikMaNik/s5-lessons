@@ -17,8 +17,9 @@ class UserObj(BaseModel):
 
 
 class UserOriginRepository:
-    def __init__(self, pg: PgConnect) -> None:
+    def __init__(self, pg: PgConnect, log) -> None:
         self._db = pg
+        self.log = log
 
     def list_users(self, rank_threshold: int, limit: int) -> List[UserObj]:
         with self._db.client().cursor(row_factory=class_row(UserObj)) as cur:
@@ -37,6 +38,7 @@ class UserOriginRepository:
             )
 
             objs = cur.fetchall()
+            self.log.info(f"{objs}")
         return objs
     
 
@@ -57,12 +59,12 @@ class UserDestRepository:
                 {
                     "user_id": user.user_id,
                     "user_name": user.user_name,
-                    "user_login": user.user_login,
+                    "user_login": user.user_login
                 },
             )
 
 class UserLoader:
-    WF_KEY = "example_dm_users__workflow"
+    WF_KEY = "example_dm_users_workflow"
     LAST_LOADED_ID_KEY = "last_loaded_id"
     BATCH_LIMIT = 100  # Рангов мало, но мы хотим продемонстрировать инкрементальную загрузку рангов.
 
@@ -87,7 +89,7 @@ class UserLoader:
 
             # Вычитываем очередную пачку объектов.
             last_loaded = wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY]
-            load_queue = self.origin.list_users(last_loaded, self.BATCH_LIMIT)
+            load_queue = self.origin.list_users(last_loaded, self.BATCH_LIMIT, self.log)
             self.log.info(f"Found {len(load_queue)} ranks to load.")
             if not load_queue:
                 self.log.info("Quitting.")
