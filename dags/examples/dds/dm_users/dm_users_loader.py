@@ -1,6 +1,6 @@
 from logging import Logger
 from typing import List
-
+from datetime import datetime
 from examples.dds import EtlSetting, DdsEtlSettingsRepository
 from lib import PgConnect
 from lib.dict_util import json2str, str2json
@@ -13,6 +13,7 @@ class UserObj(BaseModel):
     user_id: str
     user_name: str
     user_login: str
+    update_ts: datetime
 
 
 class UserOriginRepository:
@@ -28,11 +29,13 @@ class UserOriginRepository:
                     WHERE id > %(threshold)s --Пропускаем те объекты, которые уже загрузили.
                     ORDER BY id ASC --Обязательна сортировка по id, т.к. id используем в качестве курсора.
                     LIMIT %(limit)s; --Обрабатываем только одну пачку объектов.
-                """, {
+                """, 
+                {
                     "threshold": rank_threshold,
                     "limit": limit
                 }
             )
+
             objs = cur.fetchall()
         return objs
     
