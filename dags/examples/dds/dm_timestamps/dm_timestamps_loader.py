@@ -56,9 +56,10 @@ class TimestamptOriginRepository:
 class TimestampDestRepository:
 
     def insert_timestamps(self, conn: Connection, timestamps, log) -> None:
+        dt = datetime.strptime(timestamps['date'], "%Y-%m-%d %H:%M:%S")
         log.info(f'''
-                    "ts": {datetime.strptime(timestamps['date'], "%Y-%m-%d %H:%M:%S")},
-                    "year": {datetime.strptime(timestamps['date'],  "%Y-%m-%d %H:%M:%S").year}
+                    "ts": {dt},
+                    "year": {dt.year}
                  ''')
         with conn.cursor() as cur:
             cur.execute(
@@ -68,12 +69,12 @@ class TimestampDestRepository:
  
                 """,
                 {
-                    "restaurant_id": timestamps['_id'],
-                    "year": timestamps['name'],
-                    "month": timestamps['update_ts'],
-                    "day": timestamps,
-                    "time": timestamps,
-                    "date": timestamps
+                    "ts": dt,
+                    "year": dt.year,
+                    "month": dt.month,
+                    "day": dt.day,
+                    "time": dt.time(),
+                    "date": dt.date()
 
                 },
             )
