@@ -23,6 +23,8 @@ class UserOriginRepository:
 
     def list_users(self, rank_threshold: int, limit: int) -> List[UserObj]:
         with self._db.client().cursor(row_factory=class_row(UserObj)) as cur:
+            self.log.info(f"{rank_threshold}")
+            self.log.info(f"{limit}")
             cur.execute(
                 """
                     SELECT object_value
@@ -85,7 +87,7 @@ class UserLoader:
             # Если настройки еще нет, заводим ее.
             wf_setting = self.settings_repository.get_setting(conn, self.WF_KEY)
             if not wf_setting:
-                wf_setting = EtlSetting(id=0, workflow_key=self.WF_KEY, workflow_settings={self.LAST_LOADED_ID_KEY: 1})
+                wf_setting = EtlSetting(id=0, workflow_key=self.WF_KEY, workflow_settings={self.LAST_LOADED_ID_KEY: -1})
 
             # Вычитываем очередную пачку объектов.
             last_loaded = wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY]
