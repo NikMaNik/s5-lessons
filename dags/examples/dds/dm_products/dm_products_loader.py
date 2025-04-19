@@ -42,7 +42,7 @@ class ProductOriginRepository:
 
             objs = cur.fetchall()
             
-
+            self.log.info(f"obj = {result}")
             result = []
             max_id = 0
             for row in objs:
