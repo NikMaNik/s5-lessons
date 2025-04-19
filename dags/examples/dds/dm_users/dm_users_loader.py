@@ -29,7 +29,7 @@ class UserOriginRepository:
                     FROM ordersystem_users
                     WHERE id > 0 --Пропускаем те объекты, которые уже загрузили.
                     ORDER BY id ASC --Обязательна сортировка по id, т.к. id используем в качестве курсора.
-                    LIMIT %(limit)s; --Обрабатываем только одну пачку объектов.
+                    LIMIT 100; --Обрабатываем только одну пачку объектов.
                 """, 
                 {
                     "threshold": rank_threshold,
