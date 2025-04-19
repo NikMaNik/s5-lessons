@@ -1,7 +1,7 @@
 from logging import Logger
 from typing import List
 
-from examples.stg import EtlSetting, StgEtlSettingsRepository
+from examples.dds import EtlSetting, StgEtlSettingsRepository
 from lib import PgConnect
 from lib.dict_util import json2str, str2json
 from psycopg import Connection
@@ -34,7 +34,7 @@ class UserOriginRepository:
                 }
             )
             objs = cur.fetchall()
-
+            print(objs)
             objs = str2json(objs)
         return objs
     
