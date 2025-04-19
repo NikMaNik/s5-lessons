@@ -2,7 +2,7 @@ import logging
 
 import pendulum
 from airflow.decorators import dag, task
-from examples.dds.dm_users.dm_users_loader import RestaurantLoader
+from examples.dds.dm_restaurants.dm_restaurants_loader import RestaurantLoader
 from lib import ConnectionBuilder
 
 log = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ def sprint5_example_dds_restaurants_dag():
     # origin_pg_connect = ConnectionBuilder.pg_conn("PG_ORIGIN_BONUS_SYSTEM_CONNECTION")
 
     # Объявляем таск, который загружает данные.
-    @task(task_id="users_load")
+    @task(task_id="restaurants_load")
     def load_restaurants():
         events_loader = RestaurantLoader(dwh_pg_connect, dwh_pg_connect, log)
         events_loader.load_restaurant()
