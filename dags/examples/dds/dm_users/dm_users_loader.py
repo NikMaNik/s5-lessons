@@ -54,7 +54,7 @@ class UserOriginRepository:
 
 class UserDestRepository:
 
-    def insert_user(self, conn: Connection, user: UserObj) -> None:
+    def insert_user(self, conn: Connection, user) -> None:
         with conn.cursor() as cur:
             cur.execute(
                 """
@@ -66,9 +66,9 @@ class UserDestRepository:
                         user_login = EXCLUDED.user_login;
                 """,
                 {
-                    "user_id": user._id,
-                    "user_name": user.name,
-                    "user_login": user.login
+                    "user_id": user['_id'],
+                    "user_name": user['name'],
+                    "user_login": user['login']
                 },
             )
 
