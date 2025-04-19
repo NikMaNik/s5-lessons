@@ -41,9 +41,13 @@ class UserOriginRepository:
 
             objs = cur.fetchall()
             self.log.info(f"{objs}")
-            objs = str2json(objs)
+            result = []
+
+            for row in objs:
+                obj = str2json(row[0])
+                result.append(obj)
             
-        return objs
+        return result
     
 
 
