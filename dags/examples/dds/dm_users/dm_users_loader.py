@@ -44,12 +44,14 @@ class UserOriginRepository:
             
 
             result = []
-            
+            max_id = 0
             for row in objs:
                 obj = str2json(row[1])
+                max_id = row[0]
                 result.append(obj)
             self.log.info(f"{result}")
-        return result
+            self.log.info(f"{max_id}")
+        return result, max_id
     
 
 
@@ -100,7 +102,7 @@ class UserLoader:
 
             # Вычитываем очередную пачку объектов.
             last_loaded = wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY]
-            load_queue = self.origin.list_users(last_loaded, self.BATCH_LIMIT)
+            load_queue, max_id = self.origin.list_users(last_loaded, self.BATCH_LIMIT)
             self.log.info(f"Found {len(load_queue)} ranks to load.")
             if not load_queue:
                 self.log.info("Quitting.")
@@ -114,7 +116,7 @@ class UserLoader:
             # Сохраняем прогресс.
             # Мы пользуемся тем же connection, поэтому настройка сохранится вместе с объектами,
             # либо откатятся все изменения целиком.
-            wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY] = max([t.id for t in load_queue])
+            wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY] = max_id
             wf_setting_json = json2str(wf_setting.workflow_settings)  # Преобразуем к строке, чтобы положить в БД.
             self.settings_repository.save_setting(conn, wf_setting.workflow_key, wf_setting_json)
 
