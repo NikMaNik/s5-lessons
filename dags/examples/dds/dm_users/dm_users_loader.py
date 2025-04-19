@@ -46,7 +46,7 @@ class UserOriginRepository:
             result = []
 
             for row in objs:
-                obj = str2json(row[0])
+                obj = str2json(row[1])
                 result.append(obj)
             
         return result
