@@ -55,7 +55,7 @@ class UserOriginRepository:
 class UserDestRepository:
 
     def insert_user(self, conn: Connection, user, log) -> None:
-        self.log.info(f'''
+        log.info(f'''
                     "user_id": {user['_id']},
                     "user_name": {user['name']},
                     "user_login": {user['login']}''')
