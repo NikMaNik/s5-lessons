@@ -103,7 +103,7 @@ class ProductDestRepository:
 class ProductLoader:
     WF_KEY = "example_dm_product_workflow"
     LAST_LOADED_ID_KEY = "last_loaded_id"
-    BATCH_LIMIT = 32  # Рангов мало, но мы хотим продемонстрировать инкрементальную загрузку рангов.
+    BATCH_LIMIT = 28  # Рангов мало, но мы хотим продемонстрировать инкрементальную загрузку рангов.
 
     def __init__(self, pg_origin: PgConnect, pg_dest: PgConnect, log: Logger) -> None:
         self.pg_dest = pg_dest
