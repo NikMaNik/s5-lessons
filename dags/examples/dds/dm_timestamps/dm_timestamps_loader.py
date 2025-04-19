@@ -57,8 +57,8 @@ class TimestampDestRepository:
 
     def insert_timestamps(self, conn: Connection, timestamps, log) -> None:
         log.info(f'''
-                    "ts": {datetime.strptime(timestamps['date'])},
-                    "year": {datetime.strptime(timestamps['date'].year)},
+                    "ts": {datetime.strptime(timestamps['date'], "%Y-%m-%d %H:%M:%S")},
+                    "year": {datetime.strptime(timestamps['date'],  "%Y-%m-%d %H:%M:%S").year},
                     "month": {timestamps['date'].month},
                     "day": {timestamps['date'].day},
                     "time": {timestamps['date'].time},
