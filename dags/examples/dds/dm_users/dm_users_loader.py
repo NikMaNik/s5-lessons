@@ -59,14 +59,14 @@ class UserDestRepository:
             )
 
 class UserLoader:
-    WF_KEY = "example_users_origin_to_stg_workflow"
+    WF_KEY = "example_dm_users__workflow"
     LAST_LOADED_ID_KEY = "last_loaded_id"
     BATCH_LIMIT = 100  # Рангов мало, но мы хотим продемонстрировать инкрементальную загрузку рангов.
 
     def __init__(self, pg_origin: PgConnect, pg_dest: PgConnect, log: Logger) -> None:
         self.pg_dest = pg_dest
         self.origin = UserOriginRepository(pg_origin)
-        self.stg = UserDestRepository()
+        self.dds = UserDestRepository()
         self.settings_repository = StgEtlSettingsRepository()
         self.log = log
 
@@ -91,8 +91,9 @@ class UserLoader:
                 return
 
             # Сохраняем объекты в базу dwh.
-            for rank in load_queue:
-                self.stg.insert_user(conn, rank)
+            for user in load_queue:
+                user = str2json(user)
+                self.dds.insert_user(conn, user)
 
             # Сохраняем прогресс.
             # Мы пользуемся тем же connection, поэтому настройка сохранится вместе с объектами,
