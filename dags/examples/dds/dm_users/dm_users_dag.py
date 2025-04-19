@@ -20,13 +20,13 @@ def sprint5_example_dds_users_dag():
     # Создаем подключение к базе dwh.
     dwh_pg_connect = ConnectionBuilder.pg_conn("PG_WAREHOUSE_CONNECTION")
 
-    # Создаем подключение к базе подсистемы бонусов.
-    origin_pg_connect = ConnectionBuilder.pg_conn("PG_ORIGIN_BONUS_SYSTEM_CONNECTION")
+    # # Создаем подключение к базе подсистемы бонусов.
+    # origin_pg_connect = ConnectionBuilder.pg_conn("PG_ORIGIN_BONUS_SYSTEM_CONNECTION")
 
     # Объявляем таск, который загружает данные.
     @task(task_id="users_load")
     def load_users():
-        events_loader = UserLoader(origin_pg_connect, dwh_pg_connect, log)
+        events_loader = UserLoader(dwh_pg_connect, dwh_pg_connect, log)
         events_loader.load_users()
 
     # Подключаем задачу загрузки событий в цепочку зависимостей
