@@ -63,7 +63,7 @@ class ProductDestRepository:
                     """
                         SELECT id 
                         FROM dds.dm_restaurants
-                        where restaurant_id == %(restaraunt_id)s
+                        where restaurant_id = %(restaraunt_id)s
                     """,
                     {
                         "restaraunt_id": rank['restaurant']['id']
