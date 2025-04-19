@@ -59,7 +59,11 @@ class TimestampDestRepository:
         dt = datetime.strptime(timestamps['date'], "%Y-%m-%d %H:%M:%S")
         log.info(f'''
                     "ts": {dt},
-                    "year": {dt.year}
+                    "year": {dt.year},
+                    "month": {dt.month},
+                    "day": {dt.day},
+                    "time": {dt.time()},
+                    "date": {dt.date()}
                  ''')
         with conn.cursor() as cur:
             cur.execute(
