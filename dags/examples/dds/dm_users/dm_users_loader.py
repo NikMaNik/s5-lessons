@@ -62,8 +62,7 @@ class UserDestRepository:
                     VALUES (%(user_id)s, %(user_name)s, %(user_login)s)
                     ON CONFLICT (user_id) DO UPDATE
                     SET
-                        user_name = EXCLUDED.user_name,
-                        user_login = EXCLUDED.user_login;
+                        user_name = EXCLUDED.user_name;
                 """,
                 {
                     "user_id": user['_id'],
