@@ -70,7 +70,7 @@ class ProductDestRepository:
                     }
                 )
                 obj = cur.fetchall()
-                restaraunt_id = obj[0]
+                restaraunt_id = obj[0][0]
 
         for order_item in rank['order_items']:
 
