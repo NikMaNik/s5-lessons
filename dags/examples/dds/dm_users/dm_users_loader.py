@@ -10,7 +10,7 @@ from pydantic import BaseModel
 
 
 class UserObj(BaseModel):
-    id: str
+    _id: str
     login: str
     name: str
     update_ts: datetime
