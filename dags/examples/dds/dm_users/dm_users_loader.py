@@ -63,11 +63,8 @@ class UserDestRepository:
             cur.execute(
                 """
                     INSERT INTO dds.dm_users(user_id, user_name, user_login)
-                    VALUES (%(user_id)s, %(user_name)s, %(user_login)s)
-                    ON CONFLICT (user_id) DO UPDATE
-                    SET
-                        user_name = EXCLUDED.user_name,
-                        user_login = EXCLUDED.user_login;
+                    VALUES (%(user_id)s, %(user_name)s, %(user_login)s);
+ 
                 """,
                 {
                     "user_id": user['_id'],
