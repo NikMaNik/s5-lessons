@@ -59,14 +59,14 @@ class RestaurantDestRepository:
 
     def insert_restaurant(self, conn: Connection, restaurant, log) -> None:
         log.info(f'''
-                    "user_id": {restaurant['_id']},
-                    "user_name": {restaurant['name']},
-                    "user_login": {restaurant['update_ts']}''')
+                    "restaurant_id": {restaurant['_id']},
+                    "restaurant_name": {restaurant['name']},
+                    "active_from": {restaurant['update_ts']}''')
         with conn.cursor() as cur:
             cur.execute(
                 """
                     INSERT INTO dds.restaurants(restaurant_id, restaurant_name, active_from, active_to)
-                    VALUES (%(user_id)s, %(user_name)s, %(user_login)s, %(active_to)s);
+                    VALUES (%(restaurant_id)s, %(restaurant_name)s, %(active_from)s, %(active_to)s);
  
                 """,
                 {
