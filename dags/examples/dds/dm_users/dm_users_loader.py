@@ -41,7 +41,7 @@ class UserOriginRepository:
             )
 
             objs = cur.fetchall()
-            
+            self.log.info(f"{objs}")
 
             result = []
 
