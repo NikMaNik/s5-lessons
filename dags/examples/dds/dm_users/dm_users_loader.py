@@ -40,7 +40,7 @@ class UserOriginRepository:
             )
 
             objs = cur.fetchall()
-            self.log.info(f"{objs}")
+            
 
             result = []
 
@@ -55,6 +55,10 @@ class UserOriginRepository:
 class UserDestRepository:
 
     def insert_user(self, conn: Connection, user) -> None:
+        self.log.info(f'''
+                    "user_id": {user['_id']},
+                    "user_name": {user['name']},
+                    "user_login": {user['login']}''')
         with conn.cursor() as cur:
             cur.execute(
                 """
