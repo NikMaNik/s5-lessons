@@ -29,7 +29,9 @@ class DdsEtlSettingsRepository:
 
         return obj
 
-    def save_setting(self, conn: Connection, workflow_key: str, workflow_settings: str) -> None:
+    def save_setting(self, conn: Connection, workflow_key: str, workflow_settings: str, log) -> None:
+        log.info(f'''workflow_key: {workflow_key}, 
+                 workflow_settings: {workflow_settings}''')
         with conn.cursor() as cur:
             cur.execute(
                 """

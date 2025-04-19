@@ -118,6 +118,6 @@ class UserLoader:
             # либо откатятся все изменения целиком.
             wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY] = max_id
             wf_setting_json = json2str(wf_setting.workflow_settings)  # Преобразуем к строке, чтобы положить в БД.
-            self.settings_repository.save_setting(conn, wf_setting.workflow_key, wf_setting_json)
+            self.settings_repository.save_setting(conn, wf_setting.workflow_key, wf_setting_json, self.log)
 
             self.log.info(f"Load finished on {wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY]}")
