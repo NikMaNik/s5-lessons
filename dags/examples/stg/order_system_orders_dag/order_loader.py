@@ -2,20 +2,20 @@ from datetime import datetime
 from logging import Logger
 
 from examples.stg import EtlSetting, StgEtlSettingsRepository
-from examples.stg.order_system_restaurants_dag.pg_saver import PgSaver
-from examples.stg.order_system_users_dag.user_reader import UserReader
+from examples.stg.order_system_orders_dag.pg_saver import PgSaver
+from examples.stg.order_system_orders_dag.order_reader import OrderReader
 from lib import PgConnect
 from lib.dict_util import json2str
 
 
-class UserLoader:
+class OrderLoader:
     _LOG_THRESHOLD = 2
     _SESSION_LIMIT = 10000
 
-    WF_KEY = "example_ordersystem_users_origin_to_stg_workflow"
+    WF_KEY = "example_ordersystem_orders_origin_to_stg_workflow"
     LAST_LOADED_TS_KEY = "last_loaded_ts"
 
-    def __init__(self, collection_loader: UserReader, pg_dest: PgConnect, pg_saver: PgSaver, logger: Logger) -> None:
+    def __init__(self, collection_loader: OrderReader, pg_dest: PgConnect, pg_saver: PgSaver, logger: Logger) -> None:
         self.collection_loader = collection_loader
         self.pg_saver = pg_saver
         self.pg_dest = pg_dest
@@ -46,8 +46,8 @@ class UserLoader:
             last_loaded_ts = datetime.fromisoformat(last_loaded_ts_str)
             self.log.info(f"starting to load from last checkpoint: {last_loaded_ts}")
 
-            load_queue = self.collection_loader.get_users(last_loaded_ts, self._SESSION_LIMIT)
-            self.log.info(f"Found {len(load_queue)} documents to sync from users collection.")
+            load_queue = self.collection_loader.get_orders(last_loaded_ts, self._SESSION_LIMIT)
+            self.log.info(f"Found {len(load_queue)} documents to sync from orders collection.")
             if not load_queue:
                 self.log.info("Quitting.")
                 return 0
