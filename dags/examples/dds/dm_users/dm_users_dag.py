@@ -30,10 +30,10 @@ def sprint5_example_dds_users_dag():
         events_loader.load_users()
 
     # Подключаем задачу загрузки событий в цепочку зависимостей
-    users_task = load_users()
+    dm_users_task = load_users()
 
     # Теперь порядок выполнения операций следующий:
-    users_task
+    dm_users_task
     
 
 stg_bonus_system_ranks_dag = sprint5_example_dds_users_dag()
