@@ -10,9 +10,9 @@ from pydantic import BaseModel
 
 
 class UserObj(BaseModel):
-    user_id: str
-    user_name: str
-    user_login: str
+    id: str
+    login: str
+    name: str
     update_ts: datetime
 
 
@@ -57,9 +57,9 @@ class UserDestRepository:
                         user_login = EXCLUDED.user_login;
                 """,
                 {
-                    "user_id": user.user_id,
-                    "user_name": user.user_name,
-                    "user_login": user.user_login
+                    "user_id": user.id,
+                    "user_name": user.name,
+                    "user_login": user.login
                 },
             )
 
