@@ -1,4 +1,4 @@
-from repositories.pg_connect import PgConnect
+from examples.repositories.pg_connect import PgConnect
 
 
 class SettlementRepository:
