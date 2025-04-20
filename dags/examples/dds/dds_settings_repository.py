@@ -1,6 +1,5 @@
 from typing import Dict, Optional
 
-from lib.dict_util import json2str
 from psycopg import Connection
 from psycopg.rows import class_row
 from pydantic import BaseModel
@@ -30,17 +29,19 @@ class DdsEtlSettingsRepository:
 
         return obj
 
-    def save_setting(self, conn: Connection, sett: EtlSetting) -> None:
+    def save_setting(self, conn: Connection, workflow_key: str, workflow_settings: str, log) -> None:
+        log.info(f'''workflow_key: {workflow_key}, 
+                 workflow_settings: {workflow_settings}''')
         with conn.cursor() as cur:
             cur.execute(
                 """
                     INSERT INTO dds.srv_wf_settings(workflow_key, workflow_settings)
-                    VALUES (%(wf_key)s, %(wf_setting)s)
+                    VALUES (%(etl_key)s, %(etl_setting)s)
                     ON CONFLICT (workflow_key) DO UPDATE
                     SET workflow_settings = EXCLUDED.workflow_settings;
                 """,
                 {
-                    "wf_key": sett.workflow_key,
-                    "wf_setting": json2str(sett.workflow_settings)
+                    "etl_key": workflow_key,
+                    "etl_setting": workflow_settings
                 },
             )
