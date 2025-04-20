@@ -111,53 +111,50 @@ class OrderDestRepository:
             obj = cur.fetchone()
             timestamp_id = obj[0]
 
+        log.info(f'''
+                    "user_id": {user_id},
+                    "restaurant_id": {restaraunt_id},
+                    "timestamp_id": {timestamp_id},
+                    "order_key": {rank['_id']},
+                    "order_status": {rank['final_status']}
+                ''')
+        
+        
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                    INSERT INTO dds.dm_orders
+                    (
+                        user_id,
+                        restaurant_id,
+                        timestamp_id,
+                        order_key,
+                        order_status
+                    )
+                    VALUES 
+                    (
+                        %(user_id)s, 
+                        %(restaurant_id)s, 
+                        %(timestamp_id)s, 
+                        %(order_key)s, 
+                        %(order_status)s
+                    )
+                    ON CONFLICT (order_key) DO UPDATE
+                    SET
+                        restaurant_id = EXCLUDED.restaurant_id,
+                        timestamp_id = EXCLUDED.timestamp_id,
+                        user_id = EXCLUDED.user_id,
+                        order_status = EXCLUDED.order_status;
 
-        for order_item in rank['order_items']:
-
-            log.info(f'''
-                        "user_id": {user_id},
-                        "restaurant_id": {restaraunt_id},
-                        "timestamp_id": {timestamp_id},
-                        "order_key": {rank['_id']},
-                        "order_status": {rank['final_status']}
-                    ''')
-            
-            
-            with conn.cursor() as cur:
-                cur.execute(
-                    """
-                        INSERT INTO dds.dm_orders
-                        (
-                            user_id,
-                            restaurant_id,
-                            timestamp_id,
-                            order_key,
-                            order_status
-                        )
-                        VALUES 
-                        (
-                            %(user_id)s, 
-                            %(restaurant_id)s, 
-                            %(timestamp_id)s, 
-                            %(order_key)s, 
-                            %(order_status)s
-                        )
-                        ON CONFLICT (order_key) DO UPDATE
-                        SET
-                            restaurant_id = EXCLUDED.restaurant_id,
-                            timestamp_id = EXCLUDED.timestamp_id,
-                            user_id = EXCLUDED.user_id,
-                            order_status = EXCLUDED.order_status;
-    
-                    """,
-                    {
-                        "user_id": user_id,
-                        "restaurant_id": restaraunt_id,
-                        "timestamp_id": timestamp_id,
-                        "order_key": rank['_id'],
-                        "order_status": rank['final_status']
-                    },
-                )
+                """,
+                {
+                    "user_id": user_id,
+                    "restaurant_id": restaraunt_id,
+                    "timestamp_id": timestamp_id,
+                    "order_key": rank['_id'],
+                    "order_status": rank['final_status']
+                },
+            )
 
 class OrderLoader:
     WF_KEY = "example_dm_order_workflow"
