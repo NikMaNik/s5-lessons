@@ -68,7 +68,7 @@ class FctOriginRepository:
                         join
                             bonus as b
                             on
-                                p.order_key = b.id;`
+                                p.order_key = b.id;
                 """
             )
 
