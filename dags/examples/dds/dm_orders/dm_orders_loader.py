@@ -42,8 +42,6 @@ class OrderOriginRepository:
             )
 
             objs = cur.fetchall()
-            
-            self.log.info(f"obj = {objs}")
             result = []
             max_id = 0
             for row in objs:
@@ -59,7 +57,7 @@ class OrderOriginRepository:
 class OrderDestRepository:
 
     def insert_order(self, conn: Connection, rank, log) -> None:
-        dt = datetime.strptime(rank['update_ts'], "%Y-%m-%d %H:%M:%S")
+        dt = datetime.strptime(rank['update_ts'], "%Y-%m-%d %H:%M:%S").date()
         with conn.cursor() as cur:
             cur.execute(
                 """
