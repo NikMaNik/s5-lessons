@@ -87,7 +87,7 @@ class FctOriginRepository:
             )
 
             objs = cur.fetchall()
-        max_id = objs[0]
+        max_id = objs[1]
         self.log.info(f"obj = {objs[0]}")
         return objs, max_id
     
