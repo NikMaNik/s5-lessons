@@ -3,17 +3,17 @@ import logging
 import pendulum
 from airflow import DAG
 from airflow.decorators import task
-from dds.config_const import ConfigConst
+from examples.dds.config_const import ConfigConst
 from lib import ConnectionBuilder
 
-from dds.dds_settings_repository import DdsEtlSettingsRepository
-from dds.fct_products_loader import FctProductsLoader
-from dds.order_loader import OrderLoader
-from dds.products_loader import ProductLoader
-from dds.restaurant_loader import RestaurantLoader
-from dds.schema_ddl import SchemaDdl
-from dds.timestamp_loader import TimestampLoader
-from dds.user_loader import UserLoader
+from examples.dds.dds_settings_repository import DdsEtlSettingsRepository
+from examples.dds.fct_products_loader import FctProductsLoader
+from examples.dds.order_loader import OrderLoader
+from examples.dds.products_loader import ProductLoader
+from examples.dds.restaurant_loader import RestaurantLoader
+from examples.dds.schema_ddl import SchemaDdl
+from examples.dds.timestamp_loader import TimestampLoader
+from examples.dds.user_loader import UserLoader
 
 log = logging.getLogger(__name__)
 
