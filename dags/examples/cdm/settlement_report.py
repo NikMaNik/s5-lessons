@@ -36,9 +36,12 @@ WITH order_sums AS (
     WHERE 
         orders.order_status = 'CLOSED'
     GROUP BY
+        fct.count,
         r.id,
         r.restaurant_name,
         tss.date
+    ORDER BY
+        settlement_date
 )
 INSERT INTO cdm.dm_settlement_report(
     restaurant_id,
