@@ -1,6 +1,3 @@
-from contextlib import contextmanager
-from typing import Generator
-
 import psycopg
 from airflow.hooks.base import BaseHook
 
@@ -33,18 +30,6 @@ class PgConnect:
 
     def client(self):
         return psycopg.connect(self.url())
-
-    @contextmanager
-    def connection(self) -> Generator[psycopg.Connection, None, None]:
-        conn = psycopg.connect(self.url())
-        try:
-            yield conn
-            conn.commit()
-        except Exception as e:
-            conn.rollback()
-            raise e
-        finally:
-            conn.close()
 
 
 class ConnectionBuilder:
