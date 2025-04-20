@@ -88,7 +88,7 @@ class OrderDestRepository:
                         user_id = %(user_id)s
                 """,
                 {
-                    "user_id": rank['user_id']
+                    "user_id": rank['user']['id']
                 }
             )
 
