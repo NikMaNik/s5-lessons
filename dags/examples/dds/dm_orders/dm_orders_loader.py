@@ -107,7 +107,7 @@ class OrderDestRepository:
                     "date": dt
                 }
             )
-            obj = cur.fetchall()
+            obj = cur.fetchone()
             timestamp_id = obj[0]
 
 
