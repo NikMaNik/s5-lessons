@@ -29,7 +29,7 @@ with DAG(
 
     settings_repository = DdsEtlSettingsRepository()
 
-    @task(task_id="schema_init")
+    @task(task_id="schema_init_dds")
     def schema_init(ds=None, **kwargs):
         rest_loader = SchemaDdl(dwh_pg_connect)
         rest_loader.init_schema()
