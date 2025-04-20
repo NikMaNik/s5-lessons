@@ -58,7 +58,6 @@ SELECT
 FROM order_sums AS s
 ON CONFLICT (restaurant_id, settlement_date) DO UPDATE
 SET
-    orders_count = EXCLUDED.orders_count,
     orders_total_sum = EXCLUDED.orders_total_sum,
     orders_bonus_payment_sum = EXCLUDED.orders_bonus_payment_sum,
     orders_bonus_granted_sum = EXCLUDED.orders_bonus_granted_sum,
