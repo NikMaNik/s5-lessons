@@ -42,15 +42,15 @@ class OrderOriginRepository:
             )
 
             objs = cur.fetchall()
-            objs.sort(key=lambda x: x.id)
-            result = []
-            max_id = 0
-            for row in objs:
-                obj = str2json(row[1])
-                max_id = row[0]
-                result.append(obj)
-            self.log.info(f"obj = {result}")
-            self.log.info(f"max_id = {max_id}")
+        objs.sort(key=lambda x: x[0])
+        result = []
+        max_id = 0
+        for row in objs:
+            obj = str2json(row[1])
+            max_id = row[0]
+            result.append(obj)
+        self.log.info(f"obj = {result}")
+        self.log.info(f"max_id = {max_id}")
         return result, max_id
     
 
