@@ -12,13 +12,13 @@ class SettlementRepository:
                     """
 WITH order_sums AS (
     SELECT
-        r.id                    AS restaurant_id,
-        r.restaurant_name       AS restaurant_name,
-        tss.date                AS settlement_date,
-        fct.count          AS orders_count,
-        SUM(fct.total_sum)      AS orders_total_sum,
-        SUM(fct.bonus_payment)  AS orders_bonus_payment_sum,
-        SUM(fct.bonus_grant)    AS orders_bonus_granted_sum
+        r.id                      AS restaurant_id,
+        r.restaurant_name         AS restaurant_name,
+        tss.date                  AS settlement_date,
+        COUNT(DISTINCT orders.id) AS orders_count,
+        SUM(fct.total_sum)        AS orders_total_sum,
+        SUM(fct.bonus_payment)    AS orders_bonus_payment_sum,
+        SUM(fct.bonus_grant)      AS orders_bonus_granted_sum
     FROM dds.fct_product_sales as fct
         INNER JOIN dds.dm_orders AS orders
             ON fct.order_id = orders.id
@@ -26,10 +26,8 @@ WITH order_sums AS (
             ON tss.id = orders.timestamp_id
         INNER JOIN dds.dm_restaurants AS r
             on r.id = orders.restaurant_id
-    WHERE 
-        orders.order_status = 'CLOSED'
+    WHERE orders.order_status = 'CLOSED'
     GROUP BY
-        fct.count,
         r.id,
         r.restaurant_name,
         tss.date
