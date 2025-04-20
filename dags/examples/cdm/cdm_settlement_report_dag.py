@@ -1,9 +1,9 @@
 import pendulum
 from airflow.decorators import dag, task
-from config_const import ConfigConst
-from repositories.pg_connect import ConnectionBuilder
+from examples.cdm.config_const import ConfigConst
+from examples.repositories.pg_connect import ConnectionBuilder
 
-from cdm.settlement_report import SettlementReportLoader
+from examples.cdm.settlement_report import SettlementReportLoader
 
 
 @dag(
