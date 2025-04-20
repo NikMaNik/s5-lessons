@@ -44,6 +44,8 @@ class FctOriginRepository:
                         do2.order_key,
                         product_id,
                         product_price
+                    limit
+                        100
                     ),
                     bonus as 
                     (
