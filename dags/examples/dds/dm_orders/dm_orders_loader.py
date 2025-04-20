@@ -42,6 +42,7 @@ class OrderOriginRepository:
             )
 
             objs = cur.fetchall()
+            objs.sort(key=lambda x: x.id)
             result = []
             max_id = 0
             for row in objs:
@@ -57,7 +58,7 @@ class OrderOriginRepository:
 class OrderDestRepository:
 
     def insert_order(self, conn: Connection, rank, log) -> None:
-        dt = datetime.strptime(rank['update_ts'], "%Y-%m-%d %H:%M:%S").date()
+        dt = datetime.strptime(rank['date'], "%Y-%m-%d %H:%M:%S").date()
         with conn.cursor() as cur:
             cur.execute(
                 """
@@ -140,7 +141,13 @@ class OrderDestRepository:
                             %(timestamp_id)s, 
                             %(order_key)s, 
                             %(order_status)s
-                        );
+                        )
+                        ON CONFLICT (order_key) DO UPDATE
+                        SET
+                            restaurant_id = EXCLUDED.restaurant_id,
+                            timestamp_id = EXCLUDED.timestamp_id,
+                            user_id = EXCLUDED.user_id,
+                            order_status = EXCLUDED.order_status;
     
                     """,
                     {
