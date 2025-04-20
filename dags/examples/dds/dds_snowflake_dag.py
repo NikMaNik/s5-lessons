@@ -3,7 +3,7 @@ import logging
 import pendulum
 from airflow import DAG
 from airflow.decorators import task
-from config_const import ConfigConst
+
 from lib import ConnectionBuilder
 
 from dds.dds_settings_repository import DdsEtlSettingsRepository
@@ -16,6 +16,25 @@ from dds.timestamp_loader import TimestampLoader
 from dds.user_loader import UserLoader
 
 log = logging.getLogger(__name__)
+
+class ConfigConst:
+    PG_WAREHOUSE_CONNECTION = "PG_WAREHOUSE_CONNECTION"
+    PG_WAREHOUSE_CONNECTION = "PG_WAREHOUSE_CONNECTION"
+    PG_ORIGIN_BONUS_SYSTEM_CONNECTION = "PG_ORIGIN_BONUS_SYSTEM_CONNECTION"
+
+    MONGO_DB_CERTIFICATE_PATH = 'MONGO_DB_CERTIFICATE_PATH'
+    MONGO_DB_USER = 'MONGO_DB_USER'
+    MONGO_DB_PASSWORD = 'MONGO_DB_PASSWORD'
+    MONGO_DB_REPLICA_SET = 'MONGO_DB_REPLICA_SET'
+    MONGO_DB_DATABASE_NAME = 'MONGO_DB_DATABASE_NAME'
+    MONGO_DB_HOST = 'MONGO_DB_HOST'
+
+    PG_ORIGIN_DATABASE_NAME = "PG_ORIGIN_DATABASE_NAME"
+    PG_ORIGIN_HOST = "PG_ORIGIN_HOST"
+    PG_ORIGIN_PASSWORD = "PG_ORIGIN_PASSWORD"
+    PG_ORIGIN_PORT = "PG_ORIGIN_PORT"
+    PG_ORIGIN_USER = "PG_ORIGIN_USER"
+
 
 with DAG(
     dag_id='sprint5_case_dds_snowflake',
