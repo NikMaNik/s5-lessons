@@ -21,66 +21,66 @@ class FctOriginRepository:
             self.log.info(f"{limit}")
             cur.execute(
                 """
-                    with product as 
-                        (
-                            select 
-                                do2.order_key,
-                                dp.product_id,
-                                count(dp.product_id) as count,
-                                dp.product_price
-                            from 
-                                dds.dm_orders do2
-                            join
-                                dds.dm_restaurants dr 
-                                on
-                                    do2.restaurant_id  = dr.id
-                            join dds.dm_products dp 
-                                on
-                                    dr.id = dp.restaurant_id
-                            group by 
-                                do2.order_key,
-                                dp.product_id,
-                                dp.product_price
-                            order by 
-                                count desc,
-                                dp.product_price desc
-                        ),
-                        bonus as 
-                        (
-                        select 
-                            CAST(event_value::json->>'order_id' AS varchar) AS id,
-                            cast(prod->>'bonus_payment'as float) as bonus_payment,
-                            cast(prod->>'bonus_grant' as float) as bonus_grant
-                        from 
-                            stg.bonussystem_events,
-                            LATERAL jsonb_array_elements(event_value::jsonb->'product_payments') as prod
-                        )
-                        select 
-                            p.order_key,
-                            p.product_id,
-                            p.count,
-                            p.product_price,
-                            p.product_price * p.count as total_sum,
-                            b.bonus_payment,
-                            b.bonus_grant
-                        from 
-                            product p
-                        join
-                            bonus as b
-                            on
-                                p.order_key = b.id;
+                with product as 
+                    (
+                    select 
+                        dr.id,
+                        do2.order_key,
+                        dp.product_id,
+                        dp.product_price,
+                        count(dp.product_id) as count
+                    from 
+                        dds.dm_products dp
+                    join 
+                        dds.dm_restaurants dr 
+                        on
+                            dp.restaurant_id  = dr.id
+                    join 
+                        dds.dm_orders do2 
+                        on
+                            do2.restaurant_id = dr.id
+                    group by 
+                        dr.id,
+                        do2.order_key,
+                        product_id,
+                        product_price
+                    ),
+                    bonus as 
+                    (
+                    select 
+                        CAST(event_value::json->>'order_id' AS varchar) AS id,
+                        cast(prod->>'bonus_payment'as float) as bonus_payment,
+                        cast(prod->>'bonus_grant' as float) as bonus_grant
+                    from 
+                        stg.bonussystem_events,
+                        LATERAL jsonb_array_elements(event_value::jsonb->'product_payments') as prod
+                    )
+                select 
+                    dp.id,
+                    do2.id,
+                    p.count,
+                    p.product_price,
+                    p.product_price * p.count as total_sum,
+                    b.bonus_payment,
+                    b.bonus_grant
+                from 
+                    product p
+                join dds.dm_products dp 
+                    on
+                        dp.product_id  = p.product_id
+                join dds.dm_orders do2 
+                    on
+                        do2.order_key  = p.order_key
+                join
+                    bonus as b
+                    on
+                        p.order_key = b.id;
                 """
             )
 
             objs = cur.fetchall()
-        result = []
-        max_id = 0
-        for row in objs:
-            obj = str2json(row[1])
-            max_id = row[0]
-            result.append(obj)
-        self.log.info(f"obj = {result}")
-        return result
+        self.log.info(f"obj = {objs[0]}")
+        return objs
     
 class FctDestRepository:
     def insert_order(self, conn: Connection, fact, log) -> None:
@@ -151,7 +151,7 @@ class FctLoader:
 
             # Вычитываем очередную пачку объектов.
             last_loaded = wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY]
-            load_queue, max_id = self.origin.list_product_sales(last_loaded, self.BATCH_LIMIT)
+            load_queue = self.origin.list_product_sales(last_loaded, self.BATCH_LIMIT)
             self.log.info(f"Found {len(load_queue)} ranks to load.")
             if not load_queue:
                 self.log.info("Quitting.")
@@ -165,7 +165,7 @@ class FctLoader:
             # Сохраняем прогресс.
             # Мы пользуемся тем же connection, поэтому настройка сохранится вместе с объектами,
             # либо откатятся все изменения целиком.
-            wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY] = max_id
+            wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY] = 0
             wf_setting_json = json2str(wf_setting.workflow_settings)  # Преобразуем к строке, чтобы положить в БД.
             self.settings_repository.save_setting(conn, wf_setting.workflow_key, wf_setting_json, self.log)
 
