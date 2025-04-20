@@ -137,7 +137,7 @@ class FctDestRepository:
 class FctLoader:
     WF_KEY = "example_fct_products_sales_workflow"
     LAST_LOADED_ID_KEY = "last_loaded_id"
-    BATCH_LIMIT = 100000  # Рангов мало, но мы хотим продемонстрировать инкрементальную загрузку рангов.
+    BATCH_LIMIT = 1000  # Рангов мало, но мы хотим продемонстрировать инкрементальную загрузку рангов.
 
     def __init__(self, pg_origin: PgConnect, pg_dest: PgConnect, log: Logger) -> None:
         self.pg_dest = pg_dest
@@ -168,7 +168,7 @@ class FctLoader:
 
             # Сохраняем объекты в базу dwh.
             for row in load_queue:
-                self.log.info(f"{row}")
+                # self.log.info(f"{row}")
                 self.dds.insert_order(conn, row, self.log)
 
             # Сохраняем прогресс.
