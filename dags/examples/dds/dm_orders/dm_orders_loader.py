@@ -138,13 +138,7 @@ class OrderDestRepository:
                         %(timestamp_id)s, 
                         %(order_key)s, 
                         %(order_status)s
-                    )
-                    ON CONFLICT (order_key) DO UPDATE
-                    SET
-                        restaurant_id = EXCLUDED.restaurant_id,
-                        timestamp_id = EXCLUDED.timestamp_id,
-                        user_id = EXCLUDED.user_id,
-                        order_status = EXCLUDED.order_status;
+                    );
 
                 """,
                 {
