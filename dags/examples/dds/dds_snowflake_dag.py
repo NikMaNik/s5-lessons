@@ -3,7 +3,7 @@ import logging
 import pendulum
 from airflow import DAG
 from airflow.decorators import task
-from config_const import ConfigConst
+from dds.config_const import ConfigConst
 from lib import ConnectionBuilder
 
 from dds.dds_settings_repository import DdsEtlSettingsRepository
@@ -84,3 +84,4 @@ with DAG(
     dm_users >> dm_orders  # type: ignore
     dm_products >> fct_order_products  # type: ignore
     dm_orders >> fct_order_products  # type: ignore
+
