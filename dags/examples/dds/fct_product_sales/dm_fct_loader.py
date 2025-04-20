@@ -115,13 +115,13 @@ class FctDestRepository:
                         ;
                     """,
                     {
-                        "product_id": fact.product_id,
-                        "order_id": fact.order_id,
-                        "count": fact.count,
-                        "price": fact.price,
-                        "total_sum": fact.total_sum,
-                        "bonus_payment": fact.bonus_payment,
-                        "bonus_grant": fact.bonus_grant
+                        "product_id": fact[0],
+                        "order_id": fact[1],
+                        "count": fact[2],
+                        "price": fact[3],
+                        "total_sum": fact[4],
+                        "bonus_payment": fact[5],
+                        "bonus_grant": fact[6]
                     },
                 )
 
