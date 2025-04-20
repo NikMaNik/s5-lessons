@@ -7,8 +7,8 @@ from psycopg import Connection
 from psycopg.rows import class_row
 from pydantic import BaseModel
 
-from dds.dds_settings_repository import DdsEtlSettingsRepository, EtlSetting
-from dds.restaurant_loader import (RestaurantDdsRepository, RestaurantJsonObj,
+from examples.dds.dds_settings_repository import DdsEtlSettingsRepository, EtlSetting
+from examples.dds.restaurant_loader import (RestaurantDdsRepository, RestaurantJsonObj,
                                    RestaurantRawRepository)
 
 

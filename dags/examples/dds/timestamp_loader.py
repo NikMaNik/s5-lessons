@@ -7,8 +7,8 @@ from psycopg import Connection
 from psycopg.rows import class_row
 from pydantic import BaseModel
 
-from dds.dds_settings_repository import DdsEtlSettingsRepository, EtlSetting
-from dds.order_repositories import OrderJsonObj, OrderRawRepository
+from examples.dds.dds_settings_repository import DdsEtlSettingsRepository, EtlSetting
+from examples.dds.order_repositories import OrderJsonObj, OrderRawRepository
 
 
 class TimestampDdsObj(BaseModel):

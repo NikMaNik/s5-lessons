@@ -3,10 +3,10 @@ from datetime import datetime
 
 from lib import PgConnect
 
-from dds.dds_settings_repository import DdsEtlSettingsRepository, EtlSetting
-from dds.restaurant_loader import RestaurantDdsRepository
-from dds.timestamp_loader import TimestampDdsRepository
-from dds.user_loader import UserDdsRepository
+from examples.dds.dds_settings_repository import DdsEtlSettingsRepository, EtlSetting
+from examples.dds.restaurant_loader import RestaurantDdsRepository
+from examples.dds.timestamp_loader import TimestampDdsRepository
+from examples.dds.user_loader import UserDdsRepository
 from order_repositories import (OrderDdsObj, OrderDdsRepository, OrderJsonObj,
                                 OrderRawRepository)
 

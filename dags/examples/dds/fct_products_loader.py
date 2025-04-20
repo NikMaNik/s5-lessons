@@ -7,10 +7,10 @@ from lib import PgConnect
 from psycopg import Connection
 from pydantic import BaseModel
 
-from dds.bonus_event_repository import BonusEventRepository
-from dds.dds_settings_repository import DdsEtlSettingsRepository, EtlSetting
-from dds.order_repositories import OrderDdsRepository
-from dds.products_loader import ProductDdsObj, ProductDdsRepository
+from examples.dds.bonus_event_repository import BonusEventRepository
+from examples.dds.dds_settings_repository import DdsEtlSettingsRepository, EtlSetting
+from examples.dds.order_repositories import OrderDdsRepository
+from examples.dds.products_loader import ProductDdsObj, ProductDdsRepository
 
 log = logging.getLogger(__name__)
 
