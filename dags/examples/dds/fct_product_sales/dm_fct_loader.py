@@ -160,7 +160,7 @@ class FctLoader:
 
             # Вычитываем очередную пачку объектов.
             last_loaded = wf_setting.workflow_settings[self.LAST_LOADED_ID_KEY]
-            (load_queue, max_id) = self.origin.list_product_sales(last_loaded, self.BATCH_LIMIT)
+            load_queue, max_id = self.origin.list_product_sales(last_loaded, self.BATCH_LIMIT)
             self.log.info(f"Found {len(load_queue)} ranks to load.")
             if not load_queue:
                 self.log.info("Quitting.")
