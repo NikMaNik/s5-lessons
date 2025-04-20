@@ -73,8 +73,8 @@ class OrderDestRepository:
                     "restaraunt_id": rank['restaurant']['id']
                 }
             )
-            obj = cur.fetchall()
-            restaraunt_id = obj[0][0]
+            obj = cur.fetchone()
+            restaraunt_id = obj[0]
 
         with conn.cursor() as cur:
             cur.execute(
