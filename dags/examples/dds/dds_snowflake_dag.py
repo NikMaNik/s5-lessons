@@ -64,7 +64,7 @@ with DAG(
         fct_loader = FctProductsLoader(dwh_pg_connect, settings_repository)
         fct_loader.load_product_facts()
 
-    init_schema = schema_init()
+    init_schema_dds = schema_init()
     dm_restaurants = load_dm_restaurants()
     dm_products = load_dm_products()
     dm_timestamps = load_dm_timestamps()
@@ -72,11 +72,11 @@ with DAG(
     dm_orders = load_dm_orders()
     fct_order_products = load_fct_order_products()
 
-    init_schema >> dm_restaurants  # type: ignore
-    init_schema >> dm_timestamps  # type: ignore
-    init_schema >> dm_users  # type: ignore
-    init_schema >> dm_products  # type: ignore
-    init_schema >> dm_orders  # type: ignore
+    init_schema_dds >> dm_restaurants  # type: ignore
+    init_schema_dds >> dm_timestamps  # type: ignore
+    init_schema_dds >> dm_users  # type: ignore
+    init_schema_dds >> dm_products  # type: ignore
+    init_schema_dds >> dm_orders  # type: ignore
     
     dm_restaurants >> dm_products  # type: ignore
     dm_restaurants >> dm_orders  # type: ignore
