@@ -15,7 +15,7 @@ WITH order_sums AS (
         r.id                    AS restaurant_id,
         r.restaurant_name       AS restaurant_name,
         tss.date                AS settlement_date,
-        SUM(fct.count)          AS orders_count,
+        COUNT(fps.count)        AS orders_count,
         SUM(fct.total_sum)      AS orders_total_sum,
         SUM(fct.bonus_payment)  AS orders_bonus_payment_sum,
         SUM(fct.bonus_grant)    AS orders_bonus_granted_sum
