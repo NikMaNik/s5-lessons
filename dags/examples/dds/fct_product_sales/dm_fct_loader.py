@@ -40,7 +40,7 @@ class FctOriginRepository:
                         on
                             do2.restaurant_id = dr.id
                     where 
-                        id > %(threshold)s
+                        do.id > %(threshold)s
                     group by 
                         dr.id,
                         do2.order_key,
