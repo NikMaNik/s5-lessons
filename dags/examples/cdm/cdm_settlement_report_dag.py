@@ -7,7 +7,7 @@ from examples.cdm.settlement_report import SettlementReportLoader
 
 
 @dag(
-    schedule_interval='0/30 * * * *',
+    schedule_interval='0/5 * * * *',
     start_date=pendulum.datetime(2022, 5, 5, tz="UTC"),
     catchup=False,
     tags=['sprint5', 'cdm', 'settlement'],
