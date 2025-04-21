@@ -1,5 +1,5 @@
 SELECT 
-    current_timestamp at  time zone 'UTC' AS test_date_time,
+    current_timestamp::timestamp with time zone AS test_date_time,
     'test_01' AS test_name,
     CASE
         WHEN COUNT(*) > 0 THEN True  -- Если есть хотя бы одно расхождение, тест неуспешен
