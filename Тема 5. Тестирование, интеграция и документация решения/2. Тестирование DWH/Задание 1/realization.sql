@@ -15,5 +15,3 @@ ON
     a.settlement_month = e.settlement_month
 WHERE
     a.id IS NULL OR e.id IS NULL;
-
-select * from public_test.testing_result;
